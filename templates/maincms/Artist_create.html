@@ -1,0 +1,121 @@
+{% extends 'maincms_base.html' %}
+{% block content %}
+{% include "maincms/navbar.html" %}
+
+<div class="container-lg my-3" style="background-color: whitesmoke;">
+    <h1>아티스트 등록하기</h1><p>{{ Aritist_idf }}</p>
+    <form method="post" class="post-form my-3" enctype="multipart/form-data">
+            {% csrf_token %}        
+            <!-- 오류표시 스타트 -->
+            {% if form.errors %}
+              <div class="alert alert-danger" role="alert">
+                {% for field in form %}
+                    {% if field.errors %}
+                    <strong>{{ field.label }}</strong>
+                    {{ field.errors }}
+                    {% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+        <div class="container-lg" style="background-color: whitesmoke;">
+            <div class="container-md border bs-primary">
+                <div class="row my-3 px-3 align-items-center">
+                    <div class="col">
+                        <label id="Artist_name">아티스트이름 (국문)</label>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="Artist_name" id="Artist_name"
+                                    value="{{ form.Artist_name.value|default_if_none:''}}">
+                    </div>
+                    <div class="col">
+                        <label id="Artist_name_en">아티스트이름 (영문)</label>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="Artist_name_en" id="Artist_name_en"
+                                    value="{{ form.Artist_name_en.value|default_if_none:'none'}}">
+                    </div>
+                </div>
+                <div class="row my-3 px-3 align-items-center">
+                        <div class="col-3">
+                            <label id="sex">성별</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="form-select" aria-label="sex" id="sex" name="sex">
+                                <option selected>선택하세요</option>
+                                <option value="Man">남성</option>
+                                <option value="Female">여성</option>
+                                <option value="mixed">혼성</option>
+                              </select>
+                        </div>
+                        <div class="col-3">
+                            <label id="category">카테고리</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="form-select" aria-label="category" id="category" name="category">
+                                <option selected>선택하세요</option>
+                                <option value="Solo">솔로</option>
+                                <option value="Duo">듀오</option>
+                                <option value="Group">그룹</option>
+                              </select>
+                        </div>
+                </div>
+                <div class="row my-3 px-3 align-items-center" id="in_artist">
+                <div class="p pb-2 my-2 border-bottom border-primary">아티스트 링크</div>
+                    <div class="row my-3 px-3 align-items-center">
+                        <div class="col">
+                            <label id="Albums">앨범코드</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" name="Albums" id="Albums"
+                                            value="{{ form.Melon_ID.value|default_if_none:''}}">
+                            </div>
+                            <div class="col">
+                                <label id="Melon_ID">멜론 ID</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" name="Melon_ID" id="Melon_ID"
+                                            value="{{ form.Melon_ID.value|default_if_none:''}}">
+                            </div>
+                        </div>
+                        <div class="row my-3 px-3 align-items-center">
+                            <div class="col">
+                                <label id="Apple_url">Apple_url</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" name="Apple_url" id="Apple_url"
+                                            value="{{ form.Apple_url.value|default_if_none:''}}">
+                            </div>
+                            <div class="col">
+                                <label id="Spotify_ID">Spotify_ID</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" name="Spotify_ID" id="Spotify_ID"
+                                            value="{{ form.Youtube_ID.value|default_if_none:''}}">
+                            </div>
+                        </div>
+                        <div class="row my-3 px-3 align-items-center">
+                            <div class="col">
+                                <label id="Youtube_ID">Youtube_ID</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" name="Youtube_ID" id="Youtube_ID"
+                                            value="{{ form.Youtube_ID.value|default_if_none:''}}">
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control-sm" type="file" id="Artist_image" name="Artist_image"></td>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-3 px-3 align-items-center border-primary">
+                        <button type="submit" class="btn btn-primary">등록하기</button>
+                    </div>
+                </form>
+            </div> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+
+        </div>
+    </div>
+
+    {% endblock %}
