@@ -29,10 +29,10 @@
                 <div class="input-group mb-1 col">
                     <label class="input-group-text" for="inputGroupSelect01">앨범 장르</label>
                     <select class="form-select" id="inputGroupSelect01">
-                      <option selected>Choose...</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                        <option selected>선택하세요</option>
+                        {% for g in genre_list %}
+                        <option value="{{ g.genres }}">{{ g.genres }}</td>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -40,10 +40,10 @@
                 <div class="input-group mb-1 col">
                     <label class="input-group-text" for="inputGroupSelect01">앨범 유형</label>
                     <select class="form-select" id="inputGroupSelect01">
-                      <option selected>Choose...</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                        <option selected>Choose...</option>
+                        {% for c in Category_list %}
+                        <option value="{{ c.a_Category }}">{{ c.a_Category }}</td>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="input-group mb-1 col">
@@ -161,10 +161,10 @@
                             <div class="input-group input-group-sm mb-1 col">
                                 <label class="input-group-text" for="inputGroupSelect01">곡 장르</label>
                                 <select class="form-select" id="inputGroupSelect01">
-                                <option selected>Choose...</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                <option selected>선택하세요</option>
+                                {% for g in genre_list %}
+                                    <option value="{{ g.genres }}">{{ g.genres }}</td>
+                                {% endfor %}
                                 </select>
                             </div> 
                             <div class="input-group input-group-sm mb-1 col">

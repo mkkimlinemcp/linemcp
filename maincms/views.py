@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import create_Artist_profile
+from .models import create_Artist_profile, album_genres, album_Category
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -15,7 +15,10 @@ def maincms_in(request):
 
 
 def create_album(request):
-    return render(request, 'maincms/album_create.html')
+    genre_list = album_genres.objects.all()
+    Category_list = album_Category.objects.all()
+    context = { 'genre_list' : genre_list, 'Category_list' : Category_list }
+    return render(request, 'maincms/album_create.html', context)
 
 def Artists(request):
     """
