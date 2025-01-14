@@ -6,12 +6,26 @@ from django.template.loader import render_to_string
 from django.views import generic
 from django.utils import timezone
 
-from .forms import Artist_create_form
+from .forms import Artist_create_form, test_form
 
 
 # Create your views here.
 def maincms_in(request):
     return render(request, 'maincms/index.html')
+
+def test_go(request):
+
+    if request.method == 'POST':
+        form = test_form(request.POST)
+        if form.is_valid():
+            test_list = form.save(commit=False)
+            test_list.save()
+            return redirect('maincms:test')
+    else:
+        form = test_form()
+    context = {'form' : form}
+
+    return render(request, 'maincms/test.html', context)
 
 
 def create_album(request):

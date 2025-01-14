@@ -32,3 +32,15 @@ class album_Category(models.Model):
 
     def __str__(self):
         return self.a_Category
+    
+class test(models.Model):
+    test1 = models.TextField()
+    test2 = models.TextField()
+    test3 = models.TextField()
+    test4 = models.TextField()
+    test5 = models.TextField()
+    test6 = models.TextField()
+    test7 = models.TextField()
+
+    def __str__(self):
+        return self.test1
