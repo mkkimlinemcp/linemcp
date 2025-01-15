@@ -1,6 +1,7 @@
 {% extends 'maincms_base.html' %}
 {% block content %}
 {% include "maincms/navbar.html" %}
+
 <div class="container-lg my-3" style="background-color: whitesmoke;">
     <div class="row my-3 align-items-center">
         <div class="input-group mb-1 col">
@@ -14,46 +15,105 @@
     </div>
 </div>
 <div class="container-lg my-3" style="background-color: whitesmoke;">
-    <form method="post">
-        {% csrf_token %}
-        <div class="row my-3 align-items-center">
-            <div class="input-group mb-1 col">
-                <span class="input-group-text" id="test1">test1</span>
-                <input type="text" class="form-control" id="test1">
+    <form id="test" method="get">
+        <div id="1">
+            <div class="row my-3 align-items-center">
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text">test1</span>
+                    <input type="text" class="form-control" name="test1" id="test1">
+                </div>
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text">test2</span>
+                    <input type="text" class="form-control" name="test2" id="test2">
+                </div>
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text">test3</span>
+                    <input type="text" class="form-control" name="test3" id="test3">
+                </div>
             </div>
-            <div class="input-group mb-1 col">
-                <span class="input-group-text" id="test2">test2</span>
-                <input type="text" class="form-control" id="test2">
+            <div class="row my-3 align-items-center">
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text">test4</span>
+                    <input type="text" class="form-control" name="test4" id="test4">
+                </div>
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text">test5</span>
+                    <input type="text" class="form-control" name="test5" id="test5">
+                </div>
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text">test6</span>
+                    <input type="text" class="form-control" name="test6" id="test6">
+                </div>
             </div>
-            <div class="input-group mb-1 col">
-                <span class="input-group-text" id="test3">test3</span>
-                <input type="text" class="form-control" id="test3">
+            <div class="row my-3 align-items-center">
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text">test7</span>
+                    <input type="text" class="form-control" name="test7" id="test7">
+                </div>
             </div>
         </div>
-        <div class="row my-3 align-items-center">
-            <div class="input-group mb-1 col">
-                <span class="input-group-text" id="test4">test4</span>
-                <input type="text" class="form-control" id="test4">
+        <div id="2">
+            <div class="row my-3 align-items-center">
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text">test1</span>
+                    <input type="text" class="form-control" name="test1" id="test1">
+                </div>
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text">test2</span>
+                    <input type="text" class="form-control" name="test2" id="test2">
+                </div>
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text" id="test3">test3</span>
+                    <input type="text" class="form-control" name="test3" id="test3">
+                </div>
             </div>
-            <div class="input-group mb-1 col">
-                <span class="input-group-text" id="test5">test5</span>
-                <input type="text" class="form-control" id="test5">
+            <div class="row my-3 align-items-center">
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text" id="test4">test4</span>
+                    <input type="text" class="form-control" name="test4" id="test4">
+                </div>
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text" id="test5">test5</span>
+                    <input type="text" class="form-control" name="test5" id="test5">
+                </div>
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text" id="test6">test6</span>
+                    <input type="text" class="form-control" name="test6" id="test6">
+                </div>
             </div>
-            <div class="input-group mb-1 col">
-                <span class="input-group-text" id="test6">test6</span>
-                <input type="text" class="form-control" id="test6">
-            </div>
-        </div>
-        <div class="row my-3 align-items-center">
-            <div class="input-group mb-1 col">
-                <span class="input-group-text" id="test7">test7</span>
-                <input type="text" class="form-control" id="test7">
+            <div class="row my-3 align-items-center">
+                <div class="input-group mb-1 col">
+                    <span class="input-group-text" id="test7">test7</span>
+                    <input type="text" class="form-control" name="test7" id="test7">
+                </div>
             </div>
         </div>
         <div class="row my-3 align-items-center">
             <button class="btn btn-primary" type="submit">전송</button>
         </div>
     </form>
-</div>
 
+</div>
+</script>
+<script>
+document.getElementById("test").addEventListener("submit", function(event) {
+    event.preventDefault();
+    var i = 0;
+    var num = 7;
+    var formData = new Array();
+    var formData = [
+        {
+      test1: document.getElementById("test1").value,
+      test2: document.getElementById("test2").value,
+      test3: document.getElementById("test3").value,
+      test4: document.getElementById("test4").value,
+      test5: document.getElementById("test5").value,
+      test6: document.getElementById("test6").value,
+      test7: document.getElementById("test7").value
+    }
+    ];
+    var jsonData = JSON.stringify(formData);
+    console.log(jsonData);
+  });
+</script>
 {% endblock %}

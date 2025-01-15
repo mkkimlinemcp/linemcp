@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import create_Artist_profile, album_genres, album_Category
+from .models import create_Artist_profile, album_genres, album_Category, test
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.views import generic
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 from .forms import Artist_create_form, test_form
 
@@ -13,19 +14,26 @@ from .forms import Artist_create_form, test_form
 def maincms_in(request):
     return render(request, 'maincms/index.html')
 
+@csrf_exempt
 def test_go(request):
+    print(request.GET)
+    print(request.method)
+    print(request.path)
+    test_list = request.GET
+    print(test_list)
 
-    if request.method == 'POST':
-        form = test_form(request.POST)
-        if form.is_valid():
-            test_list = form.save(commit=False)
-            test_list.save()
-            return redirect('maincms:test')
-    else:
-        form = test_form()
-    context = {'form' : form}
+    #if request.method == 'POST':
+        #form = test_form(request.POST)
+        #if form.is_valid():
+            #test_list = form.save(commit=False)
+            #test_list.save()
+            #return redirect('maincms:test_test')
+    #else:
+        #form = test_form()
+    #context = {'form' : form}
+    print("ready")
 
-    return render(request, 'maincms/test.html', context)
+    return render(request, 'maincms/test.html')
 
 
 def create_album(request):
