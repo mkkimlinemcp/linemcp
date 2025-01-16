@@ -63,27 +63,27 @@
                     <input type="text" class="form-control" name="test2" id="test2">
                 </div>
                 <div class="input-group mb-1 col">
-                    <span class="input-group-text" id="test3">test3</span>
+                    <span class="input-group-text">test3</span>
                     <input type="text" class="form-control" name="test3" id="test3">
                 </div>
             </div>
             <div class="row my-3 align-items-center">
                 <div class="input-group mb-1 col">
-                    <span class="input-group-text" id="test4">test4</span>
+                    <span class="input-group-text">test4</span>
                     <input type="text" class="form-control" name="test4" id="test4">
                 </div>
                 <div class="input-group mb-1 col">
-                    <span class="input-group-text" id="test5">test5</span>
+                    <span class="input-group-text">test5</span>
                     <input type="text" class="form-control" name="test5" id="test5">
                 </div>
                 <div class="input-group mb-1 col">
-                    <span class="input-group-text" id="test6">test6</span>
+                    <span class="input-group-text">test6</span>
                     <input type="text" class="form-control" name="test6" id="test6">
                 </div>
             </div>
             <div class="row my-3 align-items-center">
                 <div class="input-group mb-1 col">
-                    <span class="input-group-text" id="test7">test7</span>
+                    <span class="input-group-text">test7</span>
                     <input type="text" class="form-control" name="test7" id="test7">
                 </div>
             </div>
@@ -100,19 +100,28 @@ document.getElementById("test").addEventListener("submit", function(event) {
     event.preventDefault();
     var i = 0;
     var num = 7;
-    var formData = new Array();
-    var formData = [
-        {
-      test1: document.getElementById("test1").value,
-      test2: document.getElementById("test2").value,
-      test3: document.getElementById("test3").value,
-      test4: document.getElementById("test4").value,
-      test5: document.getElementById("test5").value,
-      test6: document.getElementById("test6").value,
-      test7: document.getElementById("test7").value
-    }
-    ];
-    var jsonData = JSON.stringify(formData);
+    var formData = {};
+    var formData2 = {};
+    var arr1 = [];
+    formData.test1 = $("#1").find("#test1").val();
+    formData.test2 = $("#1").find("#test2").val();
+    formData.test3 = $("#1").find("#test3").val();
+    formData.test4 = $("#1").find("#test4").val();
+    formData.test5 = $("#1").find("#test5").val();
+    formData.test6 = $("#1").find("#test6").val();
+    formData.test7 = $("#1").find("#test7").val();
+    arr1.push(formData)
+
+    formData2.test1 = $("#2").find("#test1").val();
+    formData2.test2 = $("#2").find("#test2").val();
+    formData2.test3 = $("#2").find("#test3").val();
+    formData2.test4 = $("#2").find("#test4").val();
+    formData2.test5 = $("#2").find("#test5").val();
+    formData2.test6 = $("#2").find("#test6").val();
+    formData2.test7 = $("#2").find("#test7").val();
+    arr1.push(formData2)
+
+    var jsonData = JSON.stringify(arr1);
     console.log(jsonData);
   });
 </script>
