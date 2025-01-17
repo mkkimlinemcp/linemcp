@@ -15,7 +15,7 @@
     </div>
 </div>
 <div class="container-lg my-3" style="background-color: whitesmoke;">
-    <form id="test" method="get">
+    <!--<form id="test" method="get">-->
         <div id="1">
             <div class="row my-3 align-items-center">
                 <div class="input-group mb-1 col">
@@ -89,20 +89,19 @@
             </div>
         </div>
         <div class="row my-3 align-items-center">
-            <button class="btn btn-primary" type="submit">전송</button>
+            <button class="btn btn-primary" id="test" type="submit">전송</button>
         </div>
-    </form>
+    <!--</form>-->
 
 </div>
 </script>
 <script>
-document.getElementById("test").addEventListener("submit", function(event) {
+$("#test").click(function() {
     event.preventDefault();
     var i = 0;
     var num = 7;
     var formData = {};
     var formData2 = {};
-    var arr1 = [];
     formData.test1 = $("#1").find("#test1").val();
     formData.test2 = $("#1").find("#test2").val();
     formData.test3 = $("#1").find("#test3").val();
@@ -110,19 +109,20 @@ document.getElementById("test").addEventListener("submit", function(event) {
     formData.test5 = $("#1").find("#test5").val();
     formData.test6 = $("#1").find("#test6").val();
     formData.test7 = $("#1").find("#test7").val();
-    arr1.push(formData)
 
-    formData2.test1 = $("#2").find("#test1").val();
-    formData2.test2 = $("#2").find("#test2").val();
-    formData2.test3 = $("#2").find("#test3").val();
-    formData2.test4 = $("#2").find("#test4").val();
-    formData2.test5 = $("#2").find("#test5").val();
-    formData2.test6 = $("#2").find("#test6").val();
-    formData2.test7 = $("#2").find("#test7").val();
-    arr1.push(formData2)
+    console.log(formData);
 
-    var jsonData = JSON.stringify(arr1);
-    console.log(jsonData);
+    $.ajax({
+        url:'http://localhost:8000/maincms/test.html',
+        type:'POST',
+        data:JSON.stringify(formData),
+        success:function(data){
+            console.log("data pass success");
+        },
+        error: function() {
+            console.log(xhr.status + ": " + xhr.responseText);
+        }
+    })
   });
 </script>
 {% endblock %}

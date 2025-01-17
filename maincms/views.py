@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import Artist_create_form, test_form
-
+import json
 
 # Create your views here.
 def maincms_in(request):
@@ -16,29 +16,29 @@ def maincms_in(request):
 
 @csrf_exempt
 def test_go(request):
-    print(request.GET)
-    print(request.method)
-    print(request.path)
-    test_list = request.GET
-    print(test_list)
-
-    #if request.method == 'POST':
-        #form = test_form(request.POST)
-        #if form.is_valid():
-            #test_list = form.save(commit=False)
-            #test_list.save()
-            #return redirect('maincms:test_test')
-    #else:
-        #form = test_form()
-    #context = {'form' : form}
-    print("ready")
-
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print(data['test1'])
+        print(type(data))
+        form = test_form()
+        try_test = form.save(commit=False)
+        try_test.test1 = data['test1']
+        try_test.test2 = data['test2']
+        try_test.test3 = data['test3']
+        try_test.test4 = data['test4']
+        try_test.test5 = data['test5']
+        try_test.test6 = data['test6']
+        try_test.test7 = data['test7']
+        try_test.save()
+        
     return render(request, 'maincms/test.html')
 
 
 def create_album(request):
     genre_list = album_genres.objects.all()
     Category_list = album_Category.objects.all()
+    print(genre_list)
+    print(type(genre_list))
     context = { 'genre_list' : genre_list, 'Category_list' : Category_list }
     return render(request, 'maincms/album_create.html', context)
 
