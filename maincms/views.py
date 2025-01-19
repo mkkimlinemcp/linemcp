@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import create_Artist_profile, album_genres, album_Category, test
+from .models import create_Artist_profile, album_genres, album_Category, test, rightholder_cr
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -7,12 +7,25 @@ from django.views import generic
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
-from .forms import Artist_create_form, test_form
+from .forms import Artist_create_form, test_form,rightholder_cr_form
 import json
 
 # Create your views here.
 def maincms_in(request):
     return render(request, 'maincms/index.html')
+
+def rightholder_cr_view(request):
+    if request.method == 'POST':
+        form = rightholder_cr_form(request.POST)
+        if form.is_valid():
+            create = form.save(commit=False)
+            create.user_code = "A10000002"
+            create.save()
+            return redirect('maincms:rightholder_cr')
+    else:   
+        form = rightholder_cr_form()
+    context = {'form' : form}
+    return render(request, 'maincms/rightholder_cr.html' ,context)
 
 @csrf_exempt
 def test_go(request):

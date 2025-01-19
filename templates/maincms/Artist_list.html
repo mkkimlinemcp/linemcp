@@ -1,45 +1,58 @@
 {% extends 'maincms_base.html' %}
 {% block content %}
 {% include "maincms/navbar.html" %}
-<div class="container-fluid my-3" style="height:auto; background-color: whitesmoke;">
-    <div class="container-lg" style="background-color: whitesmoke;">
-        <div class="h3 pb-2 mt-4 border-bottom border-primary">아티스트 리스트</div>
-        <table class="table">
-            <thead>
-                <tr class="p-3 text-primary bs-primary-rgb border border-primary">
-                    <th>번호</th>
-                    <th>Artist Image</th>
-                    <th>Artist ID</th>
-                    <th>Artist_name</th>
-                    <th>category</th>
-                    <th>등록날짜</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if Artist_list %}
-                 {% for Artists in Artist_list %}
-                <tr class="p-3 text-primary-emphasis border border-primary-subtle">
-                    <td>{{ forloop.counter }}</td>
-                    <td><img src="http://localhost:8000/media/{{ Artists.Artist_image }}" style="width: 30px;" height="30px;"></td>
-                    <td>{{ Artists.Artist_ID }}</td>
-                    <td>{{ Artists.Artist_name }} 
-                        {% if Artists.Artist_name_en %}
-                            ({{ Artists.Artist_name_en }})
-                        {% endif %}
-                        </td>
-                    <td>{{ Artists.category }}</td>
-                    <td>{{ Artists.create_date }}</td>
-                </tr>
-                {% endfor %}
-                {% else %}
-                    <tr class="p-3 text-primary-emphasis border border-primary-subtle"><td>데이터 없음</td></tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
-    <div class="container-lg" style="background-color: whitesmoke;">
+<div class="container-lg py-3">
+    {% include "maincms/ar_navbar.html" %}
+    <h5 class="fw-bold mb-2">권리자 검색</h5>
+    <form method="get" class="info-field-start mb-5" style="font-size: 13px;">
+        <input type="text" name="q" class="form-tr" placeholder="아티스트 이름 검색"
+               value="{{ search_query }}">
+        <select name="category" class="form-select-sm" style="height: 31px;">
+            <option value="">카테고리 선택</option>
+            <option value="Artist_name" {% if search_field == "Artist_name" %}selected{% endif %}>아티스트 이름</option>
+            <option value="Artist_ID" {% if search_field == "Artist_ID" %}selected{% endif %}>아티스트 ID</option>
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm">검색</button>
+    </form>
+
+    <h5 class="fw-bold mb-2">권리자 리스트</h5>
+    <table class="table">
+        <thead class="table-light">
+            <tr>
+            <th scope="col-1" class="text-center" style="width:50px;">NO.</th>
+            <th scope="col" class="text-center">Artist Image</th>
+            <th scope="col" class="text-center">Artist ID</th>
+            <th scope="col" class="text-center">Artist_name</th>
+            <th scope="col" class="text-center">category</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if Artist_list %}
+            {% for Artists in Artist_list %}
+            <tr style="font-size: 13px;">
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td class="text-center">
+                    {% if Artists.Artist_image %}
+                    <img src="http://localhost:8000/media/{{ Artists.Artist_image }}" style="width: 30px;" height="30px;">
+                    {% else %}
+                    <img src="http://localhost:8000/media/Artist_images/user_image_none.png" style="width: 30px;" height="30px;">
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ Artists.Artist_ID }}</td>
+                <td class="text-center">{{ Artists.Artist_name }} 
+                    {% if Artists.Artist_name_en %}
+                        ({{ Artists.Artist_name_en }})
+                    {% endif %}
+                    </td>
+                <td class="text-center">{{ Artists.category }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+                <tr><td>데이터 없음</td></tr>
+            {% endif %}
+        </tbody>
+     </table>
         <a href="{% url 'maincms:create_artist' %}" class="btn btn-primary">등록하기</a>
-    </div>
 </div>
 {% endblock %}
 

@@ -1,0 +1,105 @@
+/* 탑 정해주려고 만듬 */
+.album-info {
+    margin-top: 50px;
+    background-color: aqua;
+    height: 200px;
+}
+#cover-box {
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    color: #aaa;
+}
+
+/* 컨테이너에 대한 css */
+div {
+    align-items: center;
+}
+.info-field {
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    padding: 5px;
+}
+.info-field-column {
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    padding: 2px;
+}
+.info-field-start {
+    font-size: 13px;
+    display: flex;
+    padding: 5px;
+    justify-self: left;
+}
+.info-field-col-st {
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    justify-self: start;
+    padding: 2px;
+}
+.label-field {
+    width: 150px;
+    padding-left: 10px;
+    padding-right: 5px;
+}
+.check {
+    color:red;
+}
+.left-auto {
+    margin-left: auto;
+}
+.jf-item {
+    justify-content: space-between;
+}
+.lab-sm {
+    width: 100px;
+}
+.form-tr {
+    width: 203px;
+    height: 31px;
+    border: 1px, solid #dee2e6; 
+    border-radius: 5px;
+}
+.form-in {
+    width: 203px;
+    height: 31px;
+    border: 1px, solid #dee2e6; 
+    border-radius: 5px;
+}
+.form-ck {
+    width: 31px;
+    height: 31px;
+    border: 1px, solid #dee2e6; 
+    border-radius: 5px;
+    font-size: 13px;
+
+}
+/* 상세보기 아이콘 애니메이션 */
+.icon {
+    display: inline-block;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease; /* 회전 및 색상 애니메이션 */
+    color: black; /* 기본 색상 */
+}
+.icon.rotated {
+    transform: rotate(180deg); /* 아이콘 회전 */
+    color: red; /* 클릭 시 색상 변경 */
+}
+/* 상세보기 보기 숨김 */
+.hidden-row {
+    display: none; /* 숨기기 */
+}

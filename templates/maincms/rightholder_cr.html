@@ -1,0 +1,90 @@
+{% extends 'maincms_base.html' %}
+{% block content %}
+{% include "maincms/navbar.html" %}
+<div class="container-lg py-3">
+    {% include "maincms/rh_navbar.html" %}
+    <h5 class="fw-bold">권리자 등록</h5>
+    <div class="info-field mb-3 justify-content:end">
+        <div class="info-field-start">
+            <div class="label-field" style="width: 180px;"><i class="bi bi-check"></i>아이디 정보 가져오기</div><input class="form-in" type="text" name="album_title"><a class="btn btn-outline-primary btn-sm my-1" href="#" style="width: 150px;">검색</a>
+        </div>
+    </div>
+    <form id="test" method="post">
+        {% csrf_token %}    
+        <h5 class="fw-bold">정보 입력</h5>
+        <div class="info-field-col-st mb-3">
+            <div class="info-field-col-st">
+                <div class="info-field-start mb-3">
+                        <div class="label-field" style="width: 100px;"><i class="bi bi-check check"></i>사용자ID</div><input class="form-in" type="text" name="user_id">
+                </div>
+            </div>
+            <div class="info-field-col-st">
+                <div class="info-field-start">
+                        <div class="label-field" style="width: 100px;"><i class="bi bi-check check"></i>이름</div><input class="form-in" type="text" name="user_name">
+                        <div class="label-field"style="width: 100px;"><i class="bi bi-check check"></i>이메일</div><input class="form-in" type="text" name="email">
+                        <div class="label-field"style="width: 100px;"><i class="bi bi-check check"></i>전화번호</div><input class="form-in" type="text" name="phone">
+                </div>
+            </div>
+            <div class="info-field-col-st">
+                <div class="info-field-start">
+                        <div class="label-field" style="width: 100px;"><i class="bi bi-check check"></i>은행명</div><input class="form-in" type="text" name="bank_name">
+                        <div class="label-field"style="width: 100px;"><i class="bi bi-check check"></i>계좌번호</div><input class="form-in" type="text" name="account_number">
+                        <div class="label-field"style="width: 100px;"><i class="bi bi-check check"></i>예금주</div><input class="form-in" type="text" name="account_holder">
+                </div>
+            </div>
+            <div class="info-field-col-st">
+                <div class="info-field-start mb-3">
+                        <div class="label-field" style="width: 100px;"><i class="bi bi-check check"></i>권리자등급</div>
+                        <select class="form-select-sm" name="user_level" style="width: 203px;">
+                            <option selected>선택하세요</option>
+                            <option value="typeA">typeA</option>
+                            <option value="typeB">typeB</option>
+                            <option value="typeC">typeC</option>
+                        </select>
+                        <div class="label-field"style="width: 100px;"><i class="bi bi-check check"></i>권리자유형</div>
+                        <select class="form-select-sm" name="user_type" style="width: 203px;">
+                            <option selected>선택하세요</option>
+                            <option value="개인">개인</option>
+                            <option value="사업자">사업자</option>
+                        </select>
+                        <div class="label-field"style="width: 100px;"><i class="bi bi-check check"></i>등록번호</div><input class="form-in" type="text" name="registration_num">
+                </div>
+            </div>
+            <div class="info-field-col-st">
+                <div class="info-field-start">
+                        <div class="label-field" style="width: 100px;"><i class="bi bi-check check"></i>계약일</div><input class="form-in" id="contract_date" type="text" name="contract_date" placeholder="YYYY-MM-DD">
+                        <div class="label-field"style="width: 100px;"><i class="bi bi-check check"></i>만료일</div><input class="form-in" id="expiration_date" type="text" name="expiration_date">
+                </div>
+            </div>
+        </div>
+        <div class="info-field">
+            <button type="submit" class="btn btn-primary" id="right_holder_cr">등록</button>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+    $('#contract_date').on('change', function () {
+        // 계약일 값 가져오기
+        let contractDate = $(this).val();
+
+        // 유효한 날짜 형식인지 확인
+        if (contractDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            let dateParts = contractDate.split("-"); // ["YYYY", "MM", "DD"]
+            let dateObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
+            // 2년 추가
+            dateObj.setFullYear(dateObj.getFullYear() + 2);
+
+            // yyyy-mm-dd 형식으로 변환
+            let formattedDate = dateObj.toISOString().split("T")[0];
+
+            // 만료일 필드에 값 설정
+            $('#expiration_date').val(formattedDate);
+        } else {
+            alert("날짜를 올바른 형식으로 입력해주세요. (YYYY-MM-DD)");
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -44,3 +44,23 @@ class test(models.Model):
 
     def __str__(self):
         return self.test1
+    
+class rightholder_cr(models.Model):
+    user_id = models.TextField(blank=True,)
+    user_code = models.TextField(blank=True,)
+    user_name = models.TextField()
+    email = models.TextField()
+    phone = models.TextField()
+    bank_name = models.TextField(blank=True,)
+    account_number = models.TextField(blank=True,)
+    account_holder = models.TextField(blank=True,)
+    user_level = models.TextField(blank=True,)
+    user_type = models.TextField(blank=True,)
+    registration_num = models.TextField(blank=True,)
+    contract_date = models.TextField(blank=True,)
+    expiration_date = models.TextField(blank=True,)
+    create_date = models.DateTimeField(auto_now_add=True)
+    modify_date = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.user_name, self.email
