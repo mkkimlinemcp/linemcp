@@ -4,13 +4,13 @@
 <div class="container-lg py-3">
     {% include "maincms/ar_navbar.html" %}
     <h5 class="fw-bold mb-2">권리자 검색</h5>
-    <form method="get" class="info-field-start mb-5" style="font-size: 13px;">
+    <form method="get" action="{% url 'maincms:Artists' %}" class="info-field-start mb-5" style="font-size: 13px;">
         <input type="text" name="q" class="form-tr" placeholder="아티스트 이름 검색"
                value="{{ search_query }}">
-        <select name="category" class="form-select-sm" style="height: 31px;">
+        <select name="field" class="form-select-sm" style="height: 31px;">
             <option value="">카테고리 선택</option>
-            <option value="Artist_name" {% if search_field == "Artist_name" %}selected{% endif %}>아티스트 이름</option>
-            <option value="Artist_ID" {% if search_field == "Artist_ID" %}selected{% endif %}>아티스트 ID</option>
+            <option value="Artist_name" {% if field == "Artist_name" %}selected{% endif %}>Artist Name</option>
+            <option value="Artist_ID" {% if field == "Artist_ID" %}selected{% endif %}>Artist ID</option>
         </select>
         <button type="submit" class="btn btn-primary btn-sm">검색</button>
     </form>

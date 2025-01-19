@@ -57,10 +57,24 @@ def create_album(request):
 
 def Artists(request):
     """
-    목록출력
+    목록 출력 + 검색 필드 선택 기능
     """
-    Artist_list = create_Artist_profile.objects.order_by('-create_date')
-    context = { 'Artist_list' : Artist_list }
+    query = request.GET.get('q', '')  # 검색어
+    field = request.GET.get('field', 'Artist_name')  # 검색 필드 (기본값: Artist_name)
+
+    # 유효한 필드인지 확인
+    valid_fields = ['Artist_name', 'Artist_ID']
+    if field not in valid_fields:
+        field = 'Artist_name'
+
+    if query:
+        # 검색 필드와 검색어로 필터링
+        filter_kwargs = {f"{field}__icontains": query}
+        Artist_list = create_Artist_profile.objects.filter(**filter_kwargs).order_by('-create_date')
+    else:
+        Artist_list = create_Artist_profile.objects.order_by('-create_date')
+
+    context = {'Artist_list': Artist_list, 'query': query, 'field': field, 'valid_fields': valid_fields}
     return render(request, 'maincms/Artist_list.html', context)
 
 def create_artist(request):
