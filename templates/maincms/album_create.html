@@ -19,20 +19,31 @@
             <div class="info-field">
                 <div class="label-field"><i class="bi bi-check check"></i>아티스트</div><input class="form-in" type="text" id="album_artist" name="album_artist">
                 <div class="label-field"><i class="bi bi-check check"></i>앨범장르</div>
-                <select class="form-select-sm" name="album_genre" style="width: 203px;">
+                <select class="form-select-sm" id="album_genre" name="album_genre" style="width: 203px;">
                     <option selected>선택하세요</option>
-                    {% for g in genre_list %}
-                    <option value="{{ g.genres }}">{{ g.genres }}</td>
-                    {% endfor %}
+                    <option value="POP">POP</option>
+                    <option value="Dance">Dance</option>
+                    <option value="Hiphop">Hiphop</option>
+                    <option value="Newage">Newage</option>
+                    <option value="Indie pop">Indie pop</option>
+                    <option value="Indie">Indie</option>
+                    <option value="Indie Rock">Indie Rock</option>
+                    <option value="Indie Folk">Indie Folk</option>
+                    <option value="Folk">Folk</option>
+                    <option value="World">World</option>
+                    <option value="OST">OST</option>
+                    <option value="Trot">Trot</option>
+                    <option value="Instrumental">Instrumental</option>
                 </select>
             </div>
             <div class="info-field">
                 <div class="label-field"><i class="bi bi-check check"></i>앨범유형</div>
-                <select class="form-select-sm" name="album_Category" style="width: 203px;">
+                <select class="form-select-sm" name="album_Categ" style="width: 203px;">
                     <option selected>선택하세요</option>
-                    {% for c in Category_list %}
-                    <option value="{{ g.genres }}">{{ c.a_Category }}</td>
-                    {% endfor %}
+                    <option value="싱글">싱글</td>
+                    <option value="EP">EP</td>
+                    <option value="정규">정규</td>
+                    <option value="OST">OST</td>
                 </select>
                 <div class="label-field"><i class="bi bi-check check"></i>발매국가</div>
                 <select class="form-select-sm" name="album_country" style="width: 203px;">
@@ -52,13 +63,13 @@
             </div>
             <div class="info-field">
                 <div class="label-field"><i class="bi bi-check check"></i>발매일</div><input class="form-in datepicker" type="text" name="startdate" style="width: 203px;">
-                <div class="label-field"><i class="bi bi-check check"></i>오픈일</div><input class="form-in datepicker" type="text" name="opendate" style="width: 203px;">
+                <div class="label-field"><i class="bi bi-check check"></i>오픈일</div><input class="form-in datepicker" id="opendate" type="text" name="opendate" style="width: 203px;">
             </div>
         </div>
     </div>
     <h5 class="fw-bold">권리자 정보</h5>
     <div class="info-field mb-5" id="user_info">
-        <div class="label-field"><i class="bi bi-check check"></i>권리자 찾기</div><input class="form-in" type="text" name="right_holder">
+        <div class="label-field"><i class="bi bi-check check"></i>권리자 찾기</div><input class="form-in" type="text" name="right_holder"><input class="form-in" type="text" name="right_holder_id">
         <div class="label-field"><i class="bi bi-check check"></i>정산 수수료율</div><input class="form-in" type="text" name="allocation_rate">
     </div>
     <h5 class="fw-bold">서비스 정보 및 옵션</h5>
@@ -103,7 +114,7 @@
             </div>
             <div class="info-field">               
                 <div class="label-field"><i class="bi bi-check"></i>프로모션 유무</div>
-                <select class="form-select-sm" id="promotion" style="width: 203px;">
+                <select class="form-select-sm" name="promotion" style="width: 203px;">
                     <option selected>선택하세요</option>
                     <option value="Y">Y</option>
                     <option value="N">N</option>
@@ -111,8 +122,8 @@
             </div>
         </div>
         <div class="info-field-column">
-            <a class="btn btn-outline-primary btn-sm my-1" href="#" style="width: 150px;">발매일 동기화</a>
-            <a class="btn btn-outline-primary btn-sm my-1" href="#" style="width: 150px;">장르 동기화</a>
+            <a class="btn btn-outline-primary btn-sm my-1" id="setdateButton" role="button" style="width: 150px;">발매일 동기화</a>
+            <a class="btn btn-outline-primary btn-sm my-1" id="setgenreButton" role="button" style="width: 150px;">장르 동기화</a>
             <a class="btn btn-outline-primary btn-sm my-1" id="setArtistButton" role="button" style="width: 150px;">곡 아티스트 동기화</a>
         </div>
         <div class="info-field-column">
@@ -123,8 +134,8 @@
     </div>
     <h5 class="fw-bold">디스크 / 트랙 정보</h5>
     <div class="info-field mb-5" id="service_option">
-        <div class="label-field"><i class="bi bi-check check"></i>디스크 수</div><input class="form-ck" type="text" id="disc_total_num" style="width: 31px;"value="1">
-        <div class="label-field"><i class="bi bi-check check"></i>트랙 수</div><input class="form-ck" type="text" id="track_total_num" style="width: 31px;">
+        <div class="label-field"><i class="bi bi-check check"></i>디스크 수</div><input class="form-ck" type="text" id="disc_total_num" style="width: 31px;" value="1">
+        <div class="label-field"><i class="bi bi-check check"></i>트랙 수</div><input class="form-ck" type="text" id="track_total_num" style="width: 31px;" value="1">
         <a class="btn btn-primary btn-sm my-1" role="button" id="generate" style="margin-left: 30px;">디스크 만들기</a>
     </div>
     <table class="table" id="result-table">
@@ -146,7 +157,7 @@
                 <th class='text-center' id="artist_view_1_1"></th>
                 <th class='text-center'><i class="bi bi-chevron-up icon" data-target="1_1_detail"></i></td>
             </tr>
-            <tr id="1_1_detail">
+            <tr id="detail_1_1">
                 <th colspan='3'>
                     <div class="info-field">
                         <div class="info-field-column">
@@ -156,14 +167,14 @@
                             </div>
                             <div class="info-field">
                                 <div class="label-field"><i class="bi bi-check check"></i>트랙 장르</div>                
-                                <select class="form-select-sm" name="track_genre[]" style="width: 203px;">
+                                <select class="form-select-sm track_genre" name="track_genre[]" style="width: 203px;">
                                     <option selected>선택하세요</option>
                                     {% for g in genre_list %}
                                     <option value="{{ g.genres }}">{{ g.genres }}</td>
                                     {% endfor %}
                                 </select>
                                 <div class="label-field"><i class="bi bi-check check"></i>서비스 언어</div>
-                                <select class="form-select-sm" name="track_genre[]" style="width: 203px;">
+                                <select class="form-select-sm" name="track_lang[]" style="width: 203px;">
                                     <option selected>선택하세요</option>
                                     <option value="한국어">한국어</option>
                                     <option value="영어">영어</option>
@@ -174,74 +185,9 @@
                                 <div class="label-field"><i class="bi bi-check check"></i>오픈일</div><input class="form-tr datepicker" type="text" name="tr_opendate[]">
                                 <div class="label-field"><i class="bi bi-check check"></i>ISRC</div><input class="form-tr" type="text" name="isrc[]">
                             </div>
-                            <div class="info-field jf-item">
-                                <div class="label-field lab-sm"><i class="bi bi-check"></i>대표곡</div><input class="form-check-input" type="checkbox" value="" id="title_song[]">
-                                <div class="label-field lab-sm"><i class="bi bi-check"></i>성인</div><input class="form-check-input" type="checkbox" value="" id="adult[]">
-                            </div>
-                            <div class="info-field">
-                                <div class="label-field lab-sm"><i class="bi bi-check check"></i>음원추가</div><input class="form-control form-control-sm" id="song_file_1" type="file">
-                            </div>
-                        </div>
-                    </div>
-                </th>
-                <th>
-                    <div class="info-field-column jf-item">
-                        <div class="info-field"><div class="label-field"><i class="bi bi-check"></i>작사가</div><input class="form-control form-control-sm col" type="text" name="lyricist[]"></div>
-                        <div class="info-field"><div class="label-field"><i class="bi bi-check check"></i>작곡가</div><input class="form-control form-control-sm col" type="text" name="composer[]"></div>
-                        <div class="info-field"><div class="label-field"><i class="bi bi-check check"></i>편곡가</div><input class="form-control form-control-sm col" type="text" name="arranger[]"></div>
-                        <div class="info-field"><div class="label-field"><i class="bi bi-check"></i>참여아티스트</div><input class="form-control form-control-sm col" type="text" name="with_artist[]"></div>
-                        <div class="info-field"><div class="label-field"><i class="bi bi-check"></i>피쳐링아티스트</div><input class="form-control form-control-sm col" type="text" name="featured[]"></div>
-                    </div>
-                </th>
-                <th class="text-center">
-                    <div class="info-field-column">
-                        <a class='btn btn-danger btn-sm'>트랙 삭제</a>
-                    </div>
-                </th>
-            </tr>
-        </tbody>
-        <tbody id="1_2">
-            <tr>
-                <th class='text-center' ><input class="form-ck" type="number" id="disk_no_1_2" name="disk_no[]" style="width: 31px;"></div></th>
-                <th class='text-center' ><input class="form-ck" type="number" id="track_no_1_2" name="track_no[]" style="width: 31px;"></div></th>
-                <th class='text-center' id="song_title_view_1_2"></th>
-                <th class='text-center' id="artist_view_1_2"></th>
-                <th class='text-center'><i class="bi bi-chevron-up icon" data-target="1_2_detail"></i></td>
-            </tr>
-            <tr id="1_2_detail">
-                <th colspan='3'>
-                    <div class="info-field">
-                        <div class="info-field-column">
-                            <div class="info-field">
-                                <div class="label-field"><i class="bi bi-check check"></i>곡 제목</div><input class="form-tr song-title" type="text" name="song_title[]" data-target="song_title_view_1_2">
-                                <div class="label-field"><i class="bi bi-check check"></i>곡 아티스트</div><input class="form-tr song-artist" type="text" name="song_artist[]" data-target="artist_view_1_2">
-                            </div>
-                            <div class="info-field">
-                                <div class="label-field"><i class="bi bi-check check"></i>트랙 장르</div>                
-                                <select class="form-select-sm" name="track_genre[]" style="width: 203px;">
-                                    <option selected>선택하세요</option>
-                                    {% for g in genre_list %}
-                                    <option value="{{ g.genres }}">{{ g.genres }}</td>
-                                    {% endfor %}
-                                </select>
-                                <div class="label-field"><i class="bi bi-check check"></i>서비스 언어</div>
-                                <select class="form-select-sm" name="track_genre[]" style="width: 203px;">
-                                    <option selected>선택하세요</option>
-                                    <option value="한국어">한국어</option>
-                                    <option value="영어">영어</option>
-                                    <option value="일본어">일본어</option>
-                                </select>
-                            </div>
-                            <div class="info-field">
-                                <div class="label-field"><i class="bi bi-check check"></i>오픈일</div><input class="form-tr datepicker" type="text" name="tr_opendate[]">
-                                <div class="label-field"><i class="bi bi-check check"></i>ISRC</div><input class="form-tr" type="text" name="isrc[]">
-                            </div>
-                            <div class="info-field jf-item">
-                                <div class="label-field lab-sm"><i class="bi bi-check"></i>대표곡</div><input class="form-check-input" type="checkbox" value="" id="title_song[]">
-                                <div class="label-field lab-sm"><i class="bi bi-check"></i>성인</div><input class="form-check-input" type="checkbox" value="" id="adult[]">
-                            </div>
-                            <div class="info-field">
-                                <div class="label-field lab-sm"><i class="bi bi-check check"></i>음원추가</div><input class="form-control form-control-sm" id="song_file_1" type="file">
+                            <div class="info-field-start">
+                                <div class="label-field lab-sm"><i class="bi bi-check"></i>대표곡</div><input class="form-check-input" type="checkbox" value="" name="title_song[]">
+                                <div class="label-field lab-sm"><i class="bi bi-check"></i>성인</div><input class="form-check-input" type="checkbox" value="" name="adult[]">
                             </div>
                         </div>
                     </div>
@@ -263,39 +209,9 @@
             </tr>
         </tbody>
     </table>
+    <div class="info-field"><button class="btn btn-primary" type="submit" id="album_add">등록하기</button></div>
 </div>
 
-<!-- 초기 트랙 테이블 
-<script>
-    $(function(){
-       var dist_no = $('disk_list_no').val(); 
-       var track_no = $('track_list_no').val(); 
-       var i = 0;
-       i = i + 1
-       $('#disk_list_no').val(i);
-       $('#track_list_no').val(i);
-       i = 1
-        $('#disk_list_' + i).html(
-        "<tr id='track_table_" + i + "'></tr><th class='text-center'></td><th class='text-center'></td><th class='text-center'></td><th class='text-center'></td><th class='text-center'><img src='../media/album_create/album_create_detailview.png'></td></tr><tr><th colspan='3'> <div class='input-group input-group-sm my-2 col'><span class='input-group-text' id='song_title'>곡 제목</span><input type='text' class='form-control' id='song_title'></div><div class='row my-1 align-items-center'>  <div class='input-group input-group-sm mb-1 col'><label class='input-group-text' for='song_genre'>곡 장르</label><select class='form-select' id='song_genre'><option selected>선택하세요</option>{% for g in genre_list %}<option value='{{ g.genres }}'>{{ g.genres }}</td>{% endfor %}</select></div><div class='input-group input-group-sm mb-1 col'><label class='input-group-text' for='song_contry'>발매 국가</label><select class='form-select' id='song_contry'><option selected>선택하세요</option><option value='Korea'>한국</option><option value='USA'>미국</option><option value='Jepan'>일본</option></select></div></div><div class='row my-1 align-items-center'>  <div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_Artist'>곡 아티스트</span><input type='text' class='form-control' id='song_Artist'></div><div class='input-group input-group-sm mb-1 col'><label class='input-group-text' for='song_language'>곡 언어</label><select class='form-select' id='song_language'><option selected>선택하세요</option><option value='한국어'>한국어</option><option value='영어'>영어</option><option value='일본어'>일본어</option></select></div></div><div class='row my-1 align-items-center'><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_copyright'>기획사</span><input type='text' class='form-control'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_publish'>유통사</span><input type='text' class='form-control'></div></div><div class='row my-1 align-items-center'><div class='form-check ms-3 col'><input class='form-check-input' type='checkbox' value='' id='title'><label class='form-check-label' for='title'>대표곡</label></div><div class='form-check col'><input class='form-check-input' type='checkbox' value='' id='adult'><label class='form-check-label' for='adult'>성인</label></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text'  id='startdate'>발매일</span><input type='text' class='form-control' class='datepicker' id='startdate'></div></div><div class='row my-1 align-items-center'><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_ISRC'>ISRC</span><input type='text' class='form-control' id='song_ISRC'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_code'>곡 코드</span><input type='text' class='form-control' id='song_code'></div></div><div class='row my-1 align-items-center'><div class='input-group input-group-sm mb-3'><label class='input-group-text' for='song_file'>음원등록</label><input type='file' class='form-control' id='song_file'></div></div></th><th><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_lyricist'>작사가</span><input type='text' class='form-control' id='song_lyricist'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_composer'>작곡가</span><input type='text' class='form-control' id='song_composer'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_arranger'>편곡가</span><input type='text' class='form-control' id='song_arranger'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_withartist'>참여아티스트</span><input type='text' class='form-control' id='song_withartist'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_feat'>피쳐링</span><input type='text' class='form-control' id='song_feat'></div><div class='input-group input-group-sm my-3'><label class='input-group-text' for='song_lyric_file'>가사등록</label><input type='file' class='form-control' id='song_lyric_fil'></div></th><th><a class='btn btn-danger btn-sm'>트랙 삭제</a></th></tr>"
-        );
-    });
-</script>-->
-<!-- 트랙 추가
-<script>
-$("#track_add").click(function() {
-    var la = 0;
-    var num = 0;
-    la = $('#track_list_no').val(); 
-    var num = $('#track_list_no').val(); 
-    num++;
-    $('#track_list_no').val(num); 
-    $('#disk_list_' + 1).append(
-        "<tr id='track_table_" + num + "'></tr><th class='text-center'></td><th class='text-center'></td><th class='text-center'></td><th class='text-center'></td><th class='text-center'><img src='../media/album_create/album_create_detailview.png'></td></tr><tr><th colspan='3'> <div class='input-group input-group-sm my-2 col'><span class='input-group-text' id='song_title'>곡 제목</span><input type='text' class='form-control' id='song_title'></div><div class='row my-1 align-items-center'>  <div class='input-group input-group-sm mb-1 col'><label class='input-group-text' for='song_genre'>곡 장르</label><select class='form-select' id='song_genre'><option selected>선택하세요</option>{% for g in genre_list %}<option value='{{ g.genres }}'>{{ g.genres }}</td>{% endfor %}</select></div><div class='input-group input-group-sm mb-1 col'><label class='input-group-text' for='song_contry'>발매 국가</label><select class='form-select' id='song_contry'><option selected>선택하세요</option><option value='Korea'>한국</option><option value='USA'>미국</option><option value='Jepan'>일본</option></select></div></div><div class='row my-1 align-items-center'>  <div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_Artist'>곡 아티스트</span><input type='text' class='form-control' id='song_Artist'></div><div class='input-group input-group-sm mb-1 col'><label class='input-group-text' for='song_language'>곡 언어</label><select class='form-select' id='song_language'><option selected>선택하세요</option><option value='한국어'>한국어</option><option value='영어'>영어</option><option value='일본어'>일본어</option></select></div></div><div class='row my-1 align-items-center'><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_copyright'>기획사</span><input type='text' class='form-control'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_publish'>유통사</span><input type='text' class='form-control'></div></div><div class='row my-1 align-items-center'><div class='form-check ms-3 col'><input class='form-check-input' type='checkbox' value='' id='title'><label class='form-check-label' for='title'>대표곡</label></div><div class='form-check col'><input class='form-check-input' type='checkbox' value='' id='adult'><label class='form-check-label' for='adult'>성인</label></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text'  id='startdate'>발매일</span><input type='text' class='form-control' class='datepicker' id='startdate'></div></div><div class='row my-1 align-items-center'><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_ISRC'>ISRC</span><input type='text' class='form-control' id='song_ISRC'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_code'>곡 코드</span><input type='text' class='form-control' id='song_code'></div></div><div class='row my-1 align-items-center'><div class='input-group input-group-sm mb-3'><label class='input-group-text' for='song_file'>음원등록</label><input type='file' class='form-control' id='song_file'></div></div></th><th><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_lyricist'>작사가</span><input type='text' class='form-control' id='song_lyricist'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_composer'>작곡가</span><input type='text' class='form-control' id='song_composer'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_arranger'>편곡가</span><input type='text' class='form-control' id='song_arranger'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_withartist'>참여아티스트</span><input type='text' class='form-control' id='song_withartist'></div><div class='input-group input-group-sm mb-1 col'><span class='input-group-text' id='song_feat'>피쳐링</span><input type='text' class='form-control' id='song_feat'></div><div class='input-group input-group-sm my-3'><label class='input-group-text' for='song_lyric_file'>가사등록</label><input type='file' class='form-control' id='song_lyric_fil'></div></th><th><a class='btn btn-danger btn-sm'>트랙 삭제</a></th></tr>"
-    );
-    console.log("last" + la);
-    console.log("현재" + num);
-});
-</script> -->
 <script>
 $(document).ready(function () {
     $(".icon").click(function () {
@@ -310,30 +226,38 @@ $(document).ready(function () {
     });
 });
 </script>
+
 <script>
-        $(document).ready(function () {
-            // 실시간 변경 시 상위 값 갱신
-            $(".song-title").on("input", function () {
-                const targetId = $(this).data("target");
-                $("#" + targetId).text($(this).val());
+$(document).ready(function () {
+    $("#setgenreButton").on("click", function (e) {
+                e.preventDefault();
+                const syncValue = $("#album_genre").val(); // 외부 입력된 값
+                $(".track_genre").each(function () {
+                    $(this).val(syncValue); // 입력 값 설정
+                    const targetId = $(this).data("target");
+                    $("#" + targetId).text(syncValue); // 상위 값 갱신
             });
-
-            $(".song-artist").on("input", function () {
-                const targetId = $(this).data("target");
-                $("#" + targetId).text($(this).val());
+    });
+    $("#setdateButton").on("click", function (e) {
+                e.preventDefault();
+                const syncValue = $("#opendate").val(); // 외부 입력된 값
+                $(".datepicker").each(function () {
+                    $(this).val(syncValue); // 입력 값 설정
+                    const targetId = $(this).data("target");
+                    $("#" + targetId).text(syncValue); // 상위 값 갱신
             });
-
-            // 동기화 버튼 클릭 시 모든 song_artist[]에 값 적용
-            $("#setArtistButton").on("click", function (e) {
+    });
+                // 동기화 버튼 클릭 시 모든 song_artist[]에 값 적용
+    $("#setArtistButton").on("click", function (e) {
                 e.preventDefault();
                 const syncValue = $("#album_artist").val(); // 외부 입력된 값
                 $(".song-artist").each(function () {
                     $(this).val(syncValue); // 입력 값 설정
                     const targetId = $(this).data("target");
                     $("#" + targetId).text(syncValue); // 상위 값 갱신
-                });
             });
-        });
+    });
+});
 </script>
 <script>
     $(document).on('click', '.datepicker', function() {
@@ -362,31 +286,33 @@ $(document).ready(function () {
 	});//ready end
 </script>
 <script>
-$("#test").click(function() {
-    event.preventDefault();
-    var formData = {};
-    formData.test1 = $("#1").find("#test1").val();
-    formData.test2 = $("#1").find("#test2").val();
-    formData.test3 = $("#1").find("#test3").val();
-    formData.test4 = $("#1").find("#test4").val();
-    formData.test5 = $("#1").find("#test5").val();
-    formData.test6 = $("#1").find("#test6").val();
-    formData.test7 = $("#1").find("#test7").val();
+$("#album_add").click(function() {
+    const formData = new FormData();
+    formData.append('album_title',$("input[name='album_title']").val());
+    formData.append('album_title_en',$("input[name='album_title_en']").val());
+    formData.append('album_artist',$("input[name='album_artist']").val());
+    formData.append('album_genre',$("input[name='album_genre']").val());
+    formData.append('album_Categ',$("input[name='album_Categ']").val());
+    formData.append('album_country',$("input[name='album_country']").val());
+    formData.append('startdate',$("input[name='startdate']").val());
+    formData.append('opendate',$("input[name='opendate']").val());
+    formData.append('service_time',$("input[name='service_time']").val());
+    formData.append('album_copyright',$("input[name='album_copyright']").val());
+    formData.append('album_publish',$("input[name='album_publish']").val());
+    formData.append('service_area',$("input[name='service_area']").val());
+    formData.append('excluded',$("input[name='excluded']").val());
+    formData.append('service_lang',$("input[name='service_lang']").val());
+    formData.append('UPC',$("input[name='UPC']").val());
+    formData.append('UCI',$("input[name='UCI']").val());
+    formData.append('YT_service',$("input[name='YT_service']").val());
+    formData.append('status','등록');
 
-    console.log(formData);
+        // FormData의 내용을 출력하기
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[5]);
+    }
 
-    $.ajax({
-        url:'http://localhost:8000/maincms/test.html',
-        type:'POST',
-        data:JSON.stringify(formData),
-        success:function(data){
-            console.log("data pass success");
-        },
-        error: function() {
-            console.log(xhr.status + ": " + xhr.responseText);
-        }
-    })
   });
 </script>
-</script>
+
 {% endblock %}

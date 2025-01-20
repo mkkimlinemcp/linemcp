@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import create_Artist_profile, album_genres, album_Category, test, rightholder_cr
+from .models import create_Artist_profile, album_genres, album_Category, test, rightholder_cr, Album, Track
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -90,14 +90,141 @@ def test_go(request):
         
     return render(request, 'maincms/test.html')
 
-
+# 앨범 등록 기능 개발 중
+@csrf_exempt
 def create_album(request):
-    genre_list = album_genres.objects.all()
-    Category_list = album_Category.objects.all()
-    print(genre_list)
-    print(type(genre_list))
-    context = { 'genre_list' : genre_list, 'Category_list' : Category_list }
-    return render(request, 'maincms/album_create.html', context)
+    if request.method == 'POST':
+        album_title = request.POST.get('album_title')
+        album_title_en = request.POST.get('album_title_en')
+        album_artist = request.POST.get('album_artist')
+        album_genre = request.POST.get('album_genre')
+        album_Categ = request.POST.get('album_Categ')
+        album_country = request.POST.get('album_country')
+        startdate = request.POST.get('startdate')
+        opendate = request.POST.get('opendate')
+        service_time = request.POST.get('service_time')
+        album_copyright = request.POST.get('album_copyright')
+        album_publish = request.POST.get('album_publish')
+        service_area = request.POST.get('service_area')
+        excluded = request.POST.get('excluded')
+        UPC_code = request.POST.get('UPC')
+        UCI_code = request.POST.get('UCI')
+        YT_service = request.POST.get('YT_service')
+        status = request.POST.get('status')
+
+        #앨범코드 작성
+        num = Album.objects.last().id
+        num = num - 1
+        list = Album.objects.values()
+        code = list[num]['album_code']
+
+        if code == 0:
+            code = "0001"
+        else:
+            code = code[7:]
+            code = int(code) + 1
+            code = str(code)
+            code = "{0:0>4}".format(code)
+
+        if album_Categ == "정규":
+            tag = "03"
+        elif album_Categ == "싱글":
+            tag = "01"
+        elif album_Categ == "EP":
+            tag = "02"
+        else:
+            tag = "04"
+        ddd = opendate[2:4]
+        album_code = "LA" + ddd + tag + "-" + code
+        
+        album = Album.objects.create(
+            album_title = album_title,
+            album_title_en = album_title_en,
+            album_code = album_code,
+            album_artist = album_artist,
+            album_genre = album_genre,
+            album_Categ = album_Categ,
+            album_country = album_country,
+            startdate = startdate,
+            opendate = opendate,
+            service_time = service_time,
+            album_copyright = album_copyright,
+            album_publish = album_publish,
+            service_area = service_area,
+            excluded = excluded,
+            UPC_code = UPC_code,
+            UCI_code = UCI_code,
+            YT_service = YT_service,
+            status = status,
+        )
+
+        disk_no = request.POST.getlist('disk_no[]')
+        track_no = request.POST.getlist('track_no[]')
+        song_title = request.POST.getlist('song_title[]')
+        song_artist = request.POST.getlist('song_artist[]')
+        track_genre = request.POST.getlist('track_genre[]')
+        track_lang = request.POST.getlist('track_lang[]')
+        title_song = request.POST.getlist('title_song[]')
+        adult = request.POST.getlist('adult[]')
+        tr_opendate = request.POST.getlist('tr_opendate[]')
+        track_length = request.POST.getlist('track_length[]')
+        lyricist = request.POST.getlist('lyricist[]')
+        composer = request.POST.getlist('composer[]')
+        arranger = request.POST.getlist('arranger[]')
+        with_artist = request.POST.getlist('with_artist[]')
+        featured = request.POST.getlist('featured[]')
+        ISRC = request.POST.getlist('ISRC[]')
+
+        #트랙코드 생성
+        tnum = Track.objects.last().id
+        tnum = tnum - 1
+        tlist = Track.objects.values()
+        tcode = tlist[num]['Track_code']
+        if tcode == 0:
+            tcode = "0001"
+        else:
+            tcode = tcode[8:]
+            tcode = int(tcode) + 1
+            tcode = str(tcode)
+            tcode = "{0:0>4}".format(tcode)
+
+        ttt = len(track_no)
+        Track_code_bd = "L" + ddd + tag + ttt +"-"
+        Track_code = []
+
+        for j in range(len(track_no)):
+            Track_code.append(Track_code_bd + tcode)
+            tcode = int(tcode) + 1
+            tcode = str(tcode)
+            tcode = "{0:0>4}".format(tcode)
+
+        # 데이터 저장 예시
+        for i in range(len(track_no)):
+            Track.objects.create(
+                disk_no = disk_no[i],
+                track_no = track_no[i],
+                track_code = Track_code[i],
+                song_title = song_title[i],
+                song_artist = song_artist[i],
+                track_genre = track_genre[i],
+                track_lang = track_lang[i],
+                title_song = title_song[i],
+                adult = adult[i],
+                tr_opendate = tr_opendate[i],
+                track_length = track_length[i],
+                lyricist = lyricist[i],
+                composer = composer[i],
+                arranger = arranger[i],
+                with_artist = with_artist[i],
+                featured = featured[i],
+                ISRC = ISRC[i],
+            )
+        #아티스트에 등록될 수 있게 리스트로
+        #query = album_artist
+        #results = create_Artist_profile.objects.filter(Artist_name__icontains=query)[:10]  # 이름에 해당하는 검색
+        #data = [{"id": obj.id, "name": obj.name, "artist_id": obj.artist_id} for obj in results]
+        
+    return render(request, 'maincms/album_create.html')
 
 def Artists(request):
     """

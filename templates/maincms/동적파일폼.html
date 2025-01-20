@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiple Audio Length Display</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    .file-container {
+      margin-bottom: 15px;
+    }
+    .file-container input[type="file"] {
+      display: block;
+      margin: 10px auto;
+    }
+    .output {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+    .add-link {
+      display: inline-block;
+      margin: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007BFF;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .add-link:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Multiple Audio Length Display</h1>
+  <a class="add-link" id="addFile" href="#">Add Audio File</a>
+  <div id="fileForms"></div>
+
+  <script>
+    const fileFormsContainer = document.getElementById("fileForms");
+    const addFileLink = document.getElementById("addFile");
+
+    // 동적으로 파일 입력 폼 추가
+    addFileLink.addEventListener("click", (event) => {
+      event.preventDefault(); // 기본 동작(페이지 이동)을 막음
+
+      const fileContainer = document.createElement("div");
+      fileContainer.className = "file-container";
+
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "audio/*";
+
+      const output = document.createElement("div");
+      output.className = "output";
+      output.textContent = "No file selected.";
+
+      fileInput.addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+          const audio = document.createElement("audio");
+          const objectURL = URL.createObjectURL(file);
+
+          audio.src = objectURL;
+          audio.addEventListener("loadedmetadata", function () {
+            const duration = audio.duration; // 음원의 길이를 초 단위로 가져옴
+            const hours = Math.floor(duration / 3600);
+            const minutes = Math.floor((duration % 3600) / 60);
+            const seconds = Math.floor(duration % 60);
+
+            const formattedTime = 
+              `${hours.toString().padStart(2, '0')}:` +
+              `${minutes.toString().padStart(2, '0')}:` +
+              `${seconds.toString().padStart(2, '0')}`;
+
+            output.textContent = `Audio Length: ${formattedTime}`;
+
+            // Object URL 메모리에서 해제
+            URL.revokeObjectURL(objectURL);
+          });
+        } else {
+          output.textContent = "No file selected.";
+        }
+      });
+
+      fileContainer.appendChild(fileInput);
+      fileContainer.appendChild(output);
+      fileFormsContainer.appendChild(fileContainer);
+    });
+  </script>
+</body>
+</html>

@@ -34,19 +34,9 @@ $(document).ready(function () {
                                 <div class="label-field"><i class="bi bi-check check"></i>트랙 장르</div>                
                                 <select class="form-select-sm track_genre" name="track_genre[]" style="width: 203px;">
                                     <option selected>선택하세요</option>
-                                    <option value="POP">POP</option>
-                                    <option value="Dance">Dance</option>
-                                    <option value="Hiphop">Hiphop</option>
-                                    <option value="Newage">Newage</option>
-                                    <option value="Indie pop">Indie pop</option>
-                                    <option value="Indie">Indie</option>
-                                    <option value="Indie Rock">Indie Rock</option>
-                                    <option value="Indie Folk">Indie Folk</option>
-                                    <option value="Folk">Folk</option>
-                                    <option value="World">World</option>
-                                    <option value="OST">OST</option>
-                                    <option value="Trot">Trot</option>
-                                    <option value="Instrumental">Instrumental</option>
+                                    {% for g in genre_list %}
+                                    <option value="{{ g.genres }}">{{ g.genres }}</td>
+                                    {% endfor %}
                                 </select>
                                 <div class="label-field"><i class="bi bi-check check"></i>서비스 언어</div>
                                 <select class="form-select-sm" name="track_lang[]" style="width: 203px;">
@@ -65,7 +55,7 @@ $(document).ready(function () {
                                 <div class="label-field lab-sm"><i class="bi bi-check"></i>성인</div><input class="form-check-input" type="checkbox" value="" name="adult[]">
                             </div>
                             <div class="info-field">
-                                <div class="label-field lab"><i class="bi bi-check check"></i>음원추가</div><input class="form-control form-control-sm song_file" id="song_file[]" type="file" style="width:250px;"><input class="form-tr track_length" type="text" name="track_length[]"style="width:80px;"><input class="form-control form-control-sm" id="lyric_file[]" type="file"style="width:230px;">
+                                <div class="label-field lab-sm"><i class="bi bi-check check"></i>음원추가</div><input class="form-control form-control-sm" id="song_file[]" type="file"><input class="form-check-input" type="checkbox" value="" id="track_time" name="track_time[]">
                             </div>
                         </div>
                     </div>
@@ -91,48 +81,7 @@ $(document).ready(function () {
         // 결과 테이블에 추가
         $("#result-table").append(tbody);
 
-        $(document).ready(function () {
-            // 실시간 변경 시 상위 값 갱신
-            $(".song-title").on("input", function () {
-                const targetId = $(this).data("target");
-                $("#" + targetId).text($(this).val());
-                console.log(targetId);
-            });
 
-            $(".song-artist").on("input", function () {
-                const targetId = $(this).data("target");
-                $("#" + targetId).text($(this).val());
-            });
-        });
     
     });
-    // 오디오 파일 길이 계산
-    $(document).on("change", ".song_file", function () {
-        const fileInput = this;
-        const file = fileInput.files[0];
-
-        if (file) {
-            const audio = new Audio();
-            const objectURL = URL.createObjectURL(file);
-
-            audio.src = objectURL;
-            audio.addEventListener("loadedmetadata", () => {
-                const duration = audio.duration;
-                const formattedTime = formatTime(duration);
-
-                $(fileInput).siblings(".track_length").val(formattedTime);
-                URL.revokeObjectURL(objectURL);
-            });
-        }
-    });
-
-    function formatTime(seconds) {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const secs = Math.floor(seconds % 60);
-
-        return `${hours.toString().padStart(2, "0")}:` +
-               `${minutes.toString().padStart(2, "0")}:` +
-               `${secs.toString().padStart(2, "0")}`;
-    }
 });

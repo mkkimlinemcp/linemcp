@@ -1,4 +1,5 @@
 from django.db import models
+import os
 
 
 
@@ -69,3 +70,52 @@ class rightholder_cr(models.Model):
     
     def __str__(self):
         return self.user_name, self.email
+
+class Album(models.Model):
+    album_code = models.TextField()
+    album_title = models.TextField()
+    album_title_en = models.TextField(blank=True,)
+    album_artist = models.TextField()	
+    album_genre = models.TextField()
+    album_Categ = models.TextField()
+    album_country = models.TextField(blank=True,)	
+    startdate = models.TextField()	
+    opendate = models.TextField()
+    service_time = models.TextField()
+    album_copyright = models.TextField()
+    album_publish = models.TextField()	
+    service_area = models.TextField()
+    excluded = models.TextField(blank=True,)
+    service_lang = models.TextField()
+    UPC_code = models.TextField(blank=True,)
+    UCI_code = models.TextField(blank=True,)
+    YT_service = models.TextField()
+    status = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.album_code, self.album_title, self.album_artist
+    
+class Track(models.Model):
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='tracks')
+    disk_no = models.IntegerField()
+    track_no = models.IntegerField()
+    track_code = models.TextField()
+    song_title = models.TextField()
+    song_artist = models.TextField()
+    track_genre = models.TextField()
+    track_lang = models.TextField()
+    title_song = models.TextField(blank=True,)
+    adult = models.TextField(blank=True,)
+    tr_opendate = models.TextField()
+    track_length = models.TextField()
+    lyricist = models.TextField(blank=True,)
+    composer = models.TextField(blank=True,)
+    arranger = models.TextField(blank=True,)
+    with_artist = models.TextField(blank=True,)
+    featured = models.TextField(blank=True,)
+    UCI = models.TextField(blank=True,)
+    ISRC = models.TextField(blank=True,)
+
+    def __str__(self):
+        return self.track_no, self.song_title
