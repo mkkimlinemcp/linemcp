@@ -1,6 +1,7 @@
 {% extends 'maincms_base.html' %}
 {% block content %}
 {% include "maincms/navbar.html" %}
+
 <!-- 앨범 정보 상자 -->
 <div class="container-lg my-4 py-3">
     <h5 class="fw-bold">앨범 정보</h5>
@@ -122,11 +123,11 @@
     </div>
     <h5 class="fw-bold">디스크 / 트랙 정보</h5>
     <div class="info-field mb-5" id="service_option">
-        <div class="label-field"><i class="bi bi-check check"></i>디스크 수</div><input class="form-ck" type="text" id="disc_total_num" style="width: 31px;">
+        <div class="label-field"><i class="bi bi-check check"></i>디스크 수</div><input class="form-ck" type="text" id="disc_total_num" style="width: 31px;"value="1">
         <div class="label-field"><i class="bi bi-check check"></i>트랙 수</div><input class="form-ck" type="text" id="track_total_num" style="width: 31px;">
-        <a class="btn btn-primary btn-sm my-1" href="#" id="list_create" style="margin-left: 30px;">생성하기</a>
+        <a class="btn btn-primary btn-sm my-1" role="button" id="generate" style="margin-left: 30px;">디스크 만들기</a>
     </div>
-    <table class="table">
+    <table class="table" id="result-table">
         <thead class="table-light">
             <tr>
             <th scope="col-1" class="text-center" style="width:50px;">DISK</th>
@@ -359,5 +360,33 @@ $(document).ready(function () {
 		    
 		}).datepicker('show');
 	});//ready end
+</script>
+<script>
+$("#test").click(function() {
+    event.preventDefault();
+    var formData = {};
+    formData.test1 = $("#1").find("#test1").val();
+    formData.test2 = $("#1").find("#test2").val();
+    formData.test3 = $("#1").find("#test3").val();
+    formData.test4 = $("#1").find("#test4").val();
+    formData.test5 = $("#1").find("#test5").val();
+    formData.test6 = $("#1").find("#test6").val();
+    formData.test7 = $("#1").find("#test7").val();
+
+    console.log(formData);
+
+    $.ajax({
+        url:'http://localhost:8000/maincms/test.html',
+        type:'POST',
+        data:JSON.stringify(formData),
+        success:function(data){
+            console.log("data pass success");
+        },
+        error: function() {
+            console.log(xhr.status + ": " + xhr.responseText);
+        }
+    })
+  });
+</script>
 </script>
 {% endblock %}

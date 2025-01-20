@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $("#generate").click(function () {
-        const outerLoop = parseInt($("#outer-loop").val());
-        const innerLoop = parseInt($("#inner-loop").val());
+        const outerLoop = parseInt($("#disc_total_num").val());
+        const innerLoop = parseInt($("#track_total_num").val());
 
         if (isNaN(outerLoop) || isNaN(innerLoop) || outerLoop <= 0 || innerLoop <= 0) {
             alert("두 숫자를 1 이상의 값으로 입력하세요.");
@@ -28,7 +28,7 @@ $(document).ready(function () {
                 // 여기에서 원하는 코드를 추가하세요 (ex: 데이터 처리, UI 생성 등)
                 const row = $(`<tr>
                     <th class='text-center' id="disk_no">
-                        <input class="form-ck" type="number" name="album_title" style="width: 31px;">
+                        <input class="form-ck" type="number" name="album_title" style="width: 31px;" value"">
                     </th>
                 </tr>`);
                 tbody.append(row);

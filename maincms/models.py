@@ -14,6 +14,10 @@ class create_Artist_profile(models.Model):
     Apple_url = models.TextField(blank=True,)
     Spotify_ID = models.CharField(max_length=22,blank=True,)
     Youtube_ID = models.CharField(max_length=24,blank=True,)
+    genie_url = models.TextField(blank=True,)
+    bugs_url = models.TextField(blank=True,)
+    flo_url = models.TextField(blank=True,)
+    vibe_url = models.TextField(blank=True,)
     create_date = models.DateTimeField()
     Artist_ID = models.CharField(max_length=200)
     Artist_image = models.ImageField(upload_to='Artist_images', blank=True,)
@@ -61,6 +65,7 @@ class rightholder_cr(models.Model):
     expiration_date = models.TextField(blank=True,)
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(auto_now=True)
+    albums = models.TextField(blank=True,)
     
     def __str__(self):
         return self.user_name, self.email

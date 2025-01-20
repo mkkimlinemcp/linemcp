@@ -11,21 +11,65 @@ from .forms import Artist_create_form, test_form,rightholder_cr_form
 import json
 
 # Create your views here.
+
+
+
+
 def maincms_in(request):
     return render(request, 'maincms/index.html')
 
+def increment_value(value):
+    # 문자열에서 숫자와 문자 분리
+    prefix = ''.join(filter(str.isalpha, value))  # 문자 부분 (A)
+    number = ''.join(filter(str.isdigit, value))  # 숫자 부분 (10000001)
+
+    # 숫자를 증가시키기
+    incremented_number = int(number) + 1
+
+    # 숫자를 다시 0으로 패딩하여 결합
+    return f"{prefix}{incremented_number:08d}"
+
 def rightholder_cr_view(request):
+    num = rightholder_cr.objects.last().id
+    num = num - 1
+    list = rightholder_cr.objects.values()
+    vv = list[num]['user_code']
+    new_value = increment_value(vv)
+
     if request.method == 'POST':
         form = rightholder_cr_form(request.POST)
         if form.is_valid():
             create = form.save(commit=False)
-            create.user_code = "A10000002"
+            create.user_code = new_value
             create.save()
             return redirect('maincms:rightholder_cr')
     else:   
         form = rightholder_cr_form()
     context = {'form' : form}
     return render(request, 'maincms/rightholder_cr.html' ,context)
+
+def rightholder_list_view(request):
+
+    """
+    목록 출력 + 검색 필드 선택 기능
+    """
+    query = request.GET.get('q', '')  # 검색어
+    field = request.GET.get('field', 'user_name')  # 검색 필드 (기본값: user_name)
+
+    # 유효한 필드인지 확인
+    valid_fields = ['user_name', 'email']
+    if field not in valid_fields:
+        field = 'user_name'
+
+    if query:
+        # 검색 필드와 검색어로 필터링
+        filter_kwargs = {f"{field}__icontains": query}
+        rightholder_list = rightholder_cr.objects.filter(**filter_kwargs).order_by('-create_date')
+    else:
+        rightholder_list = rightholder_cr.objects.order_by('-create_date')
+
+    context = { 'rightholder_list' : rightholder_list, 'query': query, 'field': field, 'valid_fields': valid_fields }
+    return render(request, 'maincms/rightholder_list.html' ,context)
 
 @csrf_exempt
 def test_go(request):

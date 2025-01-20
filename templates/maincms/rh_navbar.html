@@ -1,13 +1,13 @@
 <nav class="navbar navbar-expand-lg mb-3 bg-body-tertiary">
     <div class="container-fluid">
-      <a class="nav-link" href="{% url 'maincms:rightholder_cr' %}"><i class="bi bi-house"></i>권리자 관리</a>
+      <a class="nav-link" href="{% url 'maincms:rightholder_view' %}"><i class="bi bi-house"></i>권리자 관리</a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'maincms:rightholder_cr' %}">: 권리자 등록</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">: 권리자 리스트</a>
+            <a class="nav-link" href="{% url 'maincms:rightholder_view' %}">: 권리자 리스트</a>
           </li>
         </ul>
       </div>

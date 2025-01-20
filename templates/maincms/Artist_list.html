@@ -3,7 +3,7 @@
 {% include "maincms/navbar.html" %}
 <div class="container-lg py-3">
     {% include "maincms/ar_navbar.html" %}
-    <h5 class="fw-bold mb-2">권리자 검색</h5>
+    <h5 class="fw-bold mb-2">아티스트 검색</h5>
     <form method="get" action="{% url 'maincms:Artists' %}" class="info-field-start mb-5" style="font-size: 13px;">
         <input type="text" name="q" class="form-tr" placeholder="아티스트 이름 검색"
                value="{{ search_query }}">
@@ -15,7 +15,7 @@
         <button type="submit" class="btn btn-primary btn-sm">검색</button>
     </form>
 
-    <h5 class="fw-bold mb-2">권리자 리스트</h5>
+    <h5 class="fw-bold mb-2">아티스트 리스트</h5>
     <table class="table">
         <thead class="table-light">
             <tr>
