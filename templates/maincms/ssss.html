@@ -87,22 +87,7 @@
                 formData.append('image', file);
 
                 // AJAX request to upload image
-                $.ajax({
-                    url: '',
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    success: function(response) {
-                        alert('Image uploaded successfully!');
-                    },
-                    error: function(error) {
-                        alert('Failed to upload image.');
-                    }
-                });
+                
             } else {
                 alert('Please drop a valid image file.');
             }

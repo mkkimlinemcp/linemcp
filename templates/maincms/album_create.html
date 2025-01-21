@@ -69,7 +69,7 @@
     </div>
     <h5 class="fw-bold">권리자 정보</h5>
     <div class="info-field mb-5" id="user_info">
-        <div class="label-field"><i class="bi bi-check check"></i>권리자 찾기</div><input class="form-in" type="text" name="right_holder"><input class="form-in" type="text" name="right_holder_id">
+        <div class="label-field"><i class="bi bi-check check"></i>권리자 찾기</div><input class="form-in" type="text" name="right_holder"><div class="label-field"><i class="bi bi-check check"></i>권리자 ID</div><input class="form-in" type="text" name="right_holder_id">
         <div class="label-field"><i class="bi bi-check check"></i>정산 수수료율</div><input class="form-in" type="text" name="allocation_rate">
     </div>
     <h5 class="fw-bold">서비스 정보 및 옵션</h5>
@@ -185,9 +185,12 @@
                                 <div class="label-field"><i class="bi bi-check check"></i>오픈일</div><input class="form-tr datepicker" type="text" name="tr_opendate[]">
                                 <div class="label-field"><i class="bi bi-check check"></i>ISRC</div><input class="form-tr" type="text" name="isrc[]">
                             </div>
-                            <div class="info-field-start">
+                            <div class="info-field jf-item">
                                 <div class="label-field lab-sm"><i class="bi bi-check"></i>대표곡</div><input class="form-check-input" type="checkbox" value="" name="title_song[]">
                                 <div class="label-field lab-sm"><i class="bi bi-check"></i>성인</div><input class="form-check-input" type="checkbox" value="" name="adult[]">
+                            </div>
+                            <div class="info-field">
+                                <div class="label-field lab"><i class="bi bi-check check"></i>음원추가</div><input class="form-control form-control-sm song_file" id="song_file[]" type="file" style="width:250px;"><input class="form-tr track_length" type="text" name="track_length[]"style="width:80px;"><input class="form-control form-control-sm" id="lyric_file[]" type="file"style="width:230px;">
                             </div>
                         </div>
                     </div>
