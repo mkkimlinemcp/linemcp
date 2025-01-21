@@ -2,12 +2,16 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
-
+from django.contrib.auth.decorators import user_passes_test
 from . import views
 
 app_name = "maincms"
+#def superuser_required(view_func):
+#    return user_passes_test(lambda u: u.is_superuser, login_url='/no-access/')(view_func)
+
 
 urlpatterns = [
+    #path('', superuser_required(views.maincms_in), name='maincms_in'),
     path('', views.maincms_in, name='maincms_in'),
     path('Artist_list.html', views.Artists, name='Artists'),
     path('Artist_create.html', views.create_artist, name='create_artist'),
