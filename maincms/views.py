@@ -6,13 +6,17 @@ from django.template.loader import render_to_string
 from django.views import generic
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-
 from .forms import Artist_create_form, test_form,rightholder_cr_form
 import json
 
 # Create your views here.
-
-
+@csrf_exempt
+def artist_find(request):
+    query = request.GET.get('q', '')  # 검색어 파라미터
+    data = create_Artist_profile.objects.filter(
+        Q(name__icontains=query) | Q(value__icontains=query)  # 검색 조건
+    ).values('id', 'Artist_name', 'Artist_ID', 'Albums')
+    return JsonResponse({'data': list(data)})
 
 
 def maincms_in(request):
@@ -219,9 +223,10 @@ def create_album(request):
                 featured = featured[i],
                 ISRC = ISRC[i],
             )
+
         #아티스트에 등록될 수 있게 리스트로
         #query = album_artist
-        #results = create_Artist_profile.objects.filter(Artist_name__icontains=query)[:10]  # 이름에 해당하는 검색
+        #results = rightholder_cr.objects.filter(user_name__icontains=query)[:10]  # 이름에 해당하는 검색
         #data = [{"id": obj.id, "name": obj.name, "artist_id": obj.artist_id} for obj in results]
         
     return render(request, 'maincms/album_create.html')

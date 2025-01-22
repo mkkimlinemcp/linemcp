@@ -66,7 +66,7 @@ class rightholder_cr(models.Model):
     expiration_date = models.TextField(blank=True,)
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(auto_now=True)
-    albums = models.JSONField(blank=True,)
+    albums = models.JSONField(default=list)
     
     def __str__(self):
         return self.user_name
@@ -126,8 +126,8 @@ class Accounting_base(models.Model):
     company_fees = models.FloatField()
     User_Fees = models.FloatField()
     Settlement_Status = models.BooleanField(blank=True,)
-    Settlement_user = models.JSONField(blank=True,)
-    Settlement_rate = models.JSONField(blank=True,)
+    Settlement_user = models.JSONField(default=list)
+    Settlement_rate = models.JSONField(default=list)
 
     def __str__(self):
             return self.Album_code, self.rightholder_code, self.User_Fees, self.Settlement_Status

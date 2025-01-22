@@ -19,5 +19,6 @@ urlpatterns = [
     path('test.html', views.test_go, name='test_test'),
     path('rightholder_cr.html', views.rightholder_cr_view, name='rightholder_cr'),
     path('rightholder_list.html', views.rightholder_list_view, name='rightholder_view'),
+    path('/artist_find/',views.artist_find, name='artist_find'),
 ] 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
