@@ -19,6 +19,7 @@ urlpatterns = [
     path('test.html', views.test_go, name='test_test'),
     path('rightholder_cr.html', views.rightholder_cr_view, name='rightholder_cr'),
     path('rightholder_list.html', views.rightholder_list_view, name='rightholder_view'),
-    path('/artist_find/',views.artist_find, name='artist_find'),
+    path('api/artists/', views.get_artist_profiles, name='get_artist_profiles'),
+    path('api/rightholder/', views.get_rightholder_profiles, name='get_rightholder_profiles'),
 ] 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -17,7 +17,7 @@
                 <div class="label-field"><i class="bi bi-check"></i>앨범명(영문)</div><input class="form-in" type="text" name="album_title_en">
             </div>
             <div class="info-field">
-                <div class="label-field"><i class="bi bi-check check"></i>아티스트</div><input class="form-in" type="text" id="album_artist" name="album_artist">
+                <div class="label-field"><i class="bi bi-check check"></i>아티스트</div><input class="form-in" type="text" data-modal="modal1" id="album_artist" name="album_artist">
                 <div class="label-field"><i class="bi bi-check check"></i>앨범장르</div>
                 <select class="form-select-sm" id="album_genre" name="album_genre" style="width: 203px;">
                     <option selected>선택하세요</option>
@@ -69,7 +69,7 @@
     </div>
     <h5 class="fw-bold">권리자 정보</h5>
     <div class="info-field mb-5" id="user_info">
-        <div class="label-field"><i class="bi bi-check check"></i>권리자 찾기</div><input class="form-in" type="text" name="right_holder"><div class="label-field"><i class="bi bi-check check"></i>권리자 ID</div><input class="form-in" type="text" name="right_holder_id">
+        <div class="label-field"><i class="bi bi-check check"></i>권리자 찾기</div><input class="form-in" type="text" data-modal="modal3" id="right_holder"  name="rightholder_code">
         <div class="label-field"><i class="bi bi-check check"></i>정산 수수료율</div><input class="form-in" type="text" name="allocation_rate">
     </div>
     <h5 class="fw-bold">서비스 정보 및 옵션</h5>
@@ -214,45 +214,78 @@
     </table>
     <div class="info-field"><button class="btn btn-primary" type="submit" id="album_add">등록하기</button></div>
 </div>
-<!-- 아티스트 검색 모달-->
-<div class="af_modal" id="aritst_find">
-    <div class="af_modal-content">
-<div class="container-lg py-3">
-    {% csrf_token %}
-    <h5 class="fw-bold mb-2">아티스트 검색</h5>
-        <input type="text" id="search-input" name="q" class="form-tr" placeholder="아티스트 이름 검색"
-               value="">
-        <button type="submit" class="btn btn-primary btn-sm">검색</button>
-    <h5 class="fw-bold mb-2">아티스트 리스트</h5>
-    <table id="ar_fi_table">
-        <thead class="table-light">
-            <tr>
-            <th scope="col-1" class="text-center" style="width:50px;">NO.</th>
-            <th scope="col" class="text-center">Artist Image</th>
-            <th scope="col" class="text-center">Artist ID</th>
-            <th scope="col" class="text-center">Artist_name</th>
-            <th scope="col" class="text-center">category</th>
-            </tr>
-        </thead>
-        <tbody class="tbody">
-            <tr style="font-size: 13px;">
-                <td class="text-center">{{ forloop.counter }}</td>
-                <td class="text-center">
-                    {% if Artists.Artist_image %}
-                    <img src="http://localhost:8000/media/{{ Artists.Artist_image }}" style="width: 30px;" height="30px;">
-                    {% else %}
-                    <img src="http://localhost:8000/media/Artist_images/user_image_none.png" style="width: 30px;" height="30px;">
-                    {% endif %}
-                </td>
-                <td class="text-center">{{ Artists.Artist_ID }}</td>
-                <td class="text-center">{{ Artists.Artist_name }}</td>
-                <td class="text-center">{{ Artists.category }}</td>
-            </tr>
-        </tbody>
-     </table>
-        <a href="{% url 'maincms:create_artist' %}" class="btn btn-primary">등록하기</a>
+
+<!-- Modal 1 -->
+<div id="modal1" class="modal">
+    <div class="af-modal-content">
+        <h5 class="fw-bold mb-2">아티스트 검색</h5>
+        <div class="info-field-start">
+            <input type="text" class="form-tr">
+            <button class="btn btn-primary btn-sm ">검색</button>
+        </div>
+        <h5 class="fw-bold mb-2">아티스트 리스트</h5>
+        <ul class="list-group artist-list" >
+            <!-- 아티스트 목록 -->
+        </ul>
+        <div class="info-field-column my-2">
+            <nav aria-label="Page navigation ">
+                <ul class="pagination pagination-sm" id="pagination">
+                    <!-- 페이지 버튼이 동적으로 추가될 예정 -->
+                </ul>
+            </nav>
+        </div>
+        <div class="info-field-column my-2">
+            <button class="btn btn-outline-primary btn-sm close-btn">Close</button>
+        </div>
+    </div>
 </div>
-      <button class="close-btn" id="closeModalBtn">Close</button>
+
+<!-- Modal 2 -->
+<div id="modal2" class="modal">
+    <div class="af-modal-content">
+        <h5 class="fw-bold mb-2">아티스트 검색</h5>
+        <div class="info-field-start">
+            <input type="text" class="form-tr">
+            <button class="btn btn-primary btn-sm search">검색</button>
+        </div>
+        <h5 class="fw-bold mb-2">아티스트 리스트</h5>
+        <ul class="list-group artist-list">
+            <!-- 아티스트 목록 -->
+        </ul>
+        <div class="info-field-column my-2">
+            <nav aria-label="Page navigation ">
+                <ul class="pagination pagination-sm" id="pagination">
+                    <!-- 페이지 버튼이 동적으로 추가될 예정 -->
+                </ul>
+            </nav>
+        </div>
+        <div class="info-field-column my-2">
+            <button class="btn btn-outline-primary btn-sm close-btn">Close</button>
+        </div>
+    </div>
+</div>
+<!-- Modal 3 -->
+<div id="modal3" class="modal">
+    <div class="af-modal-content">
+        <h5 class="fw-bold mb-2">권리자 검색</h5>
+        <div class="info-field-start">
+            <input type="text" class="form-tr">
+            <button class="btn btn-primary btn-sm search">검색</button>
+        </div>
+        <h5 class="fw-bold mb-2">권리자 리스트</h5>
+        <ul class="list-group artist-list">
+            <!-- 아티스트 목록 -->
+        </ul>
+        <div class="info-field-column my-2">
+            <nav aria-label="Page navigation ">
+                <ul class="pagination pagination-sm" id="pagination">
+                    <!-- 페이지 버튼이 동적으로 추가될 예정 -->
+                </ul>
+            </nav>
+        </div>
+        <div class="info-field-column my-2">
+            <button class="btn btn-outline-primary btn-sm close-btn">Close</button>
+        </div>
     </div>
 </div>
 <script>
@@ -269,7 +302,6 @@ $(document).ready(function () {
     });
 });
 </script>
-
 <script>
 $(document).ready(function () {
     $("#setgenreButton").on("click", function (e) {
@@ -329,36 +361,201 @@ $(document).ready(function () {
 	});//ready end
 </script>
 <script>
+// 각 모달을 초기화하는 공통 함수
+let currentPage = 1;
+let searchQuery = '';
 
+function setupModal(modalId, modelEndpoint, options = {}) {
+    const modal = $(`#${modalId}`);
+    const searchInput = modal.find('input[type="text"]');
+    const searchButton = modal.find('button.search');
+    const closeButton = modal.find('button.close-btn');
+    const list = modal.find('.artist-list');
+    const pagination = modal.find('.pagination');
+
+    let targetInput = null; // 클릭한 input 요소를 추적
+  
+    // 데이터 로드 함수
+    function loadData() {
+        console.log("Current page in loadData (before request):", currentPage); // 디버깅
+        const url = `api/${modelEndpoint}/?page=${currentPage}&search=${searchQuery}`;
+        console.log("Request URL:", url); // 요청 URL 디버깅
+        $.getJSON(url, function (data) {
+        console.log("Response Data:", data); // 서버 응답 디버깅
+        list.empty();
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+  
+        // 리스트 업데이트
+        if (options.updateList) {
+          options.updateList(data, list);
+        } else {
+          data.artists.forEach(artist => {
+            const image = artist.Artist_image || "Artist_images/user_image_none.png";
+            list.append(
+              `<li class="list-group-item artist-item" data-id="${artist.Artist_ID}">
+                <div><img src="http://localhost:8000/media/${image}" style="width: 30px;" height="30px;"></div>
+                <div style="width: 230px; font-size:13px;">${artist.Artist_name}</div>
+                <div style="width: 230px; font-size:13px;">${artist.Artist_ID}</div>
+                <div style="width: 230px; font-size:13px;">${artist.category}</div>
+              </li>`
+            );
+          });
+        }
+  
+        // 페이지네이션 업데이트
+        updatePagination(data.current_page, data.total_pages);
+      });
+    }
+
+    // 페이지네이션 생성
+    function updatePagination(currentPageFromServer, totalPages) {
+        console.log("Updating pagination. Server Current Page:", currentPageFromServer, "Total Pages:", totalPages);
+        pagination.empty();
+        pagination.append(
+        `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+            <a class="page-link" href="#" data-page="${currentPage - 1}">&laquo;</a>
+        </li>`
+        );
+        for (let i = 1; i <= totalPages; i++) {
+        pagination.append(
+            `<li class="page-item ${i === currentPage ? 'active' : ''}">
+            <a class="page-link" href="#" data-page="${i}">${i}</a>
+            </li>`
+        );
+        }
+        pagination.append(
+        `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+            <a class="page-link" href="#" data-page="${currentPage + 1}">&raquo;</a>
+        </li>`
+        );
+  
+        pagination.find('a').off('click').on('click', function (e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+            console.log("Clicked page:", page); // 디버깅
+            if (page && page !== currentPage) {
+                currentPage = page; // 전역 변수 업데이트
+                console.log("Updated currentPage:", currentPage); // 디버깅
+                loadData(); // 새로운 데이터 로드
+            }
+            });
+    }
+  
+    // 검색 버튼 클릭 이벤트
+    searchButton.on('click', function () {
+      searchQuery = searchInput.val();
+      currentPage = 1; // 검색 시 첫 페이지로 이동
+      loadData();
+    });
+  
+    // 리스트 아이템 클릭 이벤트
+    list.on('click', '.artist-item', function () {
+      const itemName = $(this).find('div:nth-child(2)').text().trim();
+      const itemId = $(this).data('id');
+  
+      // 선택한 값(targetInput)에 결과 설정
+      if (targetInput) {
+        targetInput.val(`${itemName}`);
+      }
+      modal.fadeOut(); // 모달 닫기
+    });
+  
+    // input 클릭으로 모달 열기
+    $(`[data-modal="${modalId}"]`).on('click', function () {
+      targetInput = $(this); // 클릭한 input 요소 저장
+      modal.fadeIn(); // 모달 열기
+      loadData(); // 데이터 로드
+    });
+
+    // 닫기 버튼 클릭 이벤트
+    closeButton.on('click', function () {
+        modal.fadeOut(); // 모달 닫기
+    });
+    // 초기 데이터 로드
+    loadData();
+  }
+  
+  // 모달 초기화
+  setupModal('modal1', 'artists'); // 모달1: artists 데이터
+  setupModal('modal2', 'artists');  // 모달2: albums 데이터
+  setupModal('modal3', 'rightholder', {
+    updateList: (data, list) => {
+      // 모달3 전용 리스트 렌더링
+      data.rightholders.forEach(rightholder => {
+        list.append(
+          `<li class="list-group-item artist-item" data-id="${rightholder.user_code}">
+          <div style="width: 100px; font-size:13px;">${rightholder.user_name}</div>
+          <div style="width: 100px; font-size:13px;">${rightholder.user_code}</div>
+          <div style="width: 300px; font-size:13px;">${rightholder.email}</div>
+          <div style="width: 100px; font-size:13px;">${rightholder.user_level}</div>
+        </li>`
+        );
+      });
+    }
+  });
+  
 </script>
 <script>
 $("#album_add").click(function() {
-    const formData = new FormData();
-    formData.append('album_title',$("input[name='album_title']").val());
-    formData.append('album_title_en',$("input[name='album_title_en']").val());
-    formData.append('album_artist',$("input[name='album_artist']").val());
-    formData.append('album_genre',$("input[name='album_genre']").val());
-    formData.append('album_Categ',$("input[name='album_Categ']").val());
-    formData.append('album_country',$("input[name='album_country']").val());
-    formData.append('startdate',$("input[name='startdate']").val());
-    formData.append('opendate',$("input[name='opendate']").val());
-    formData.append('service_time',$("input[name='service_time']").val());
-    formData.append('album_copyright',$("input[name='album_copyright']").val());
-    formData.append('album_publish',$("input[name='album_publish']").val());
-    formData.append('service_area',$("input[name='service_area']").val());
-    formData.append('excluded',$("input[name='excluded']").val());
-    formData.append('service_lang',$("input[name='service_lang']").val());
-    formData.append('UPC',$("input[name='UPC']").val());
-    formData.append('UCI',$("input[name='UCI']").val());
-    formData.append('YT_service',$("input[name='YT_service']").val());
-    formData.append('status','등록');
+    console.log("Album add button clicked!"); // 클릭 이벤트 확인
 
-        // FormData의 내용을 출력하기
-    for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[5]);
+    const formData = new FormData();
+    formData.append('album_title', $("input[name='album_title']").val());
+    formData.append('album_title_en', $("input[name='album_title_en']").val());
+    formData.append('album_artist', $("input[name='album_artist']").val());
+    formData.append('album_genre', $("select[name='album_genre']").val());
+    formData.append('album_Categ', $("select[name='album_Categ']").val());
+    formData.append('album_country', $("select[name='album_country']").val());
+    formData.append('startdate', $("input[name='startdate']").val());
+    formData.append('opendate', $("input[name='opendate']").val());
+    formData.append('service_time', $("select[name='service_time']").val());
+    formData.append('album_copyright', $("input[name='album_copyright']").val());
+    formData.append('album_publish', $("input[name='album_publish']").val());
+    formData.append('service_area', $("select[name='service_area']").val());
+    formData.append('excluded', $("input[name='excluded']").val());
+    formData.append('service_lang', $("select[name='service_lang']").val());
+    formData.append('UPC', $("input[name='UPC']").val());
+    formData.append('UCI', $("input[name='UCI']").val());
+    formData.append('YT_service', $("select[name='YT_service']").val());
+    formData.append('status', '등록');
+    
+    // 디스크 및 트랙 정보 수집
+    const discTotal = parseInt($("#disc_total_num").val());
+    const trackTotal = parseInt($("#track_total_num").val());
+
+
+    let trackNos = [];  // 트랙 번호 리스트
+    let songTitles = [];  // 곡 제목 리스트
+    let artistNames = [];  // 아티스트 리스트
+    let trackGenres = [];  // 트랙 장르 리스트
+    let trackLangs = [];  // 서비스 언어 리스트
+    
+    for (let disc = 1; disc <= discTotal; disc++) {
+        for (let track = 1; track <= trackTotal; track++) {
+            // 디스크 및 트랙 정보 수집
+            const track_no = $(`#track_no_${track}`).val();
+            const songTitle = $(`#song_title_view_${disc}_${track}`).text().trim();
+            const artist = $(`#artist_view_${disc}_${track}`).text().trim();
+            const trackGenre = $(`#detail_${disc}_${track} select[name='track_genre[]']`).val();
+            const trackLang = $(`#detail_${disc}_${track} select[name='track_lang[]']`).val();
+
+            // 리스트에 값 추가
+            trackNos.push(track_no);
+            songTitles.push(songTitle);
+            artistNames.push(artist);
+            trackGenres.push(trackGenre);
+            trackLangs.push(trackLang);
+        }
     }
 
-  });
+    // FormData의 내용을 출력하기
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
+});
 </script>
 
 {% endblock %}

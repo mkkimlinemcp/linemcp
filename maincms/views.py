@@ -3,21 +3,78 @@ from .models import create_Artist_profile, album_genres, album_Category, test, r
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from django.views import generic
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from .forms import Artist_create_form, test_form,rightholder_cr_form
+from django.db.models import Q 
+from django.core.paginator import Paginator
 import json
 
 # Create your views here.
-@csrf_exempt
-def artist_find(request):
-    query = request.GET.get('q', '')  # 검색어 파라미터
-    data = create_Artist_profile.objects.filter(
-        Q(name__icontains=query) | Q(value__icontains=query)  # 검색 조건
-    ).values('id', 'Artist_name', 'Artist_ID', 'Albums')
-    return JsonResponse({'data': list(data)})
 
+def get_artist_profiles(request):
+    # 페이지 번호와 페이지 크기 받아오기
+    page = request.GET.get('page', 1)
+    page_size = request.GET.get('page_size', 10)
+    search_query = request.GET.get('search', '').strip().lower()  # 검색어 가져오기
+
+    # 아티스트 데이터 필터링
+    artists = create_Artist_profile.objects.all()
+
+    if search_query:
+        artists = artists.filter(
+            Q(Artist_name__icontains=search_query) |  # 이름에 검색어 포함
+            Q(Artist_name_en__icontains=search_query)  # 영어 이름에 검색어 포함
+        )
+
+    # 페이징 처리
+    paginator = Paginator(artists.values('Artist_name','Artist_ID','Artist_image','category'), page_size)
+
+    try:
+        artists_page = paginator.page(page)
+    except Exception as e:
+        return JsonResponse({'error': 'Invalid page'}, status=400)
+
+    # 데이터와 페이지 정보를 반환
+    return JsonResponse({
+        'artists': list(artists_page.object_list),
+        'has_next': artists_page.has_next(),
+        'has_previous': artists_page.has_previous(),
+        'current_page': artists_page.number,
+        'total_pages': paginator.num_pages,
+    })
+
+def get_rightholder_profiles(request):
+    # 페이지 번호와 페이지 크기 받아오기
+    page = request.GET.get('page', 1)
+    page_size = request.GET.get('page_size', 10)
+    search_query = request.GET.get('search', '').strip().lower()  # 검색어 가져오기
+
+    # 권리자 데이터 필터링
+    rightholder = rightholder_cr.objects.all()
+
+    if search_query:
+        rightholder = rightholder.filter(
+            Q(user_name__icontains=search_query) |  # 이름에 검색어 포함
+            Q(email__icontains=search_query)  # 이메일에 검색어 포함
+        )
+
+    # 페이징 처리
+    paginator = Paginator(rightholder.values('user_name','user_code','email','user_level'), page_size)
+
+    try:
+        rightholder_page = paginator.page(page)
+    except Exception as e:
+        return JsonResponse({'error': 'Invalid page'}, status=400)
+
+    # 데이터와 페이지 정보를 반환
+    return JsonResponse({
+        'rightholders': list(rightholder_page.object_list),
+        'has_next': rightholder_page.has_next(),
+        'has_previous': rightholder_page.has_previous(),
+        'current_page': rightholder_page.number,
+        'total_pages': paginator.num_pages,
+    })
 
 def maincms_in(request):
     return render(request, 'maincms/index.html')
@@ -223,11 +280,6 @@ def create_album(request):
                 featured = featured[i],
                 ISRC = ISRC[i],
             )
-
-        #아티스트에 등록될 수 있게 리스트로
-        #query = album_artist
-        #results = rightholder_cr.objects.filter(user_name__icontains=query)[:10]  # 이름에 해당하는 검색
-        #data = [{"id": obj.id, "name": obj.name, "artist_id": obj.artist_id} for obj in results]
         
     return render(request, 'maincms/album_create.html')
 

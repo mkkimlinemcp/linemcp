@@ -28,7 +28,7 @@ $(document).ready(function () {
                         <div class="info-field-column">
                             <div class="info-field">
                                 <div class="label-field"><i class="bi bi-check check"></i>곡 제목</div><input class="form-tr song-title" type="text" name="song_title[]"  data-target="song_title_view_${outerLoop}_${i}">
-                                <div class="label-field"><i class="bi bi-check check"></i>곡 아티스트</div><input class="form-tr song-artist" type="text" name="song_artist[]" data-target="artist_view_${outerLoop}_${i}">
+                                <div class="label-field"><i class="bi bi-check check"></i>곡 아티스트</div><input class="form-tr song-artist" type="text" name="song_artist[]" data-modal="modal2" data-target="artist_view_${outerLoop}_${i}">
                             </div>
                             <div class="info-field">
                                 <div class="label-field"><i class="bi bi-check check"></i>트랙 장르</div>                

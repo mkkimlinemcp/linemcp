@@ -1,0 +1,41 @@
+
+<div class="container-lg py-3">
+  <h5 class="fw-bold mb-2">아티스트 검색</h5>
+  <form method="get" action="{% url 'maincms:artist_find' %}" class="info-field-start mb-5" style="font-size: 13px;">
+      <input type="text" id="search-input" name="q" class="form-tr" placeholder="아티스트 이름 검색"
+             value="">
+      <button type="submit" class="btn btn-primary btn-sm">검색</button>
+    </form>
+  <h5 class="fw-bold mb-2">아티스트 리스트</h5>
+  <table id="ar_fi_table">
+      <thead class="table-light">
+          <tr>
+          <th scope="col-1" class="text-center" style="width:50px;">NO.</th>
+          <th scope="col" class="text-center">Artist Image</th>
+          <th scope="col" class="text-center">Artist ID</th>
+          <th scope="col" class="text-center">Artist_name</th>
+          <th scope="col" class="text-center">category</th>
+          </tr>
+      </thead>
+      <tbody class="tbody">
+        {% if Artist_list %}
+        {% for Artists in Artist_list %}
+          <tr style="font-size: 13px;">
+              <td class="text-center">{{ forloop.counter }}</td>
+              <td class="text-center">
+                  {% if Artists.Artist_image %}
+                  <img src="http://localhost:8000/media/{{ Artists.Artist_image }}" style="width: 30px;" height="30px;">
+                  {% else %}
+                  <img src="http://localhost:8000/media/Artist_images/user_image_none.png" style="width: 30px;" height="30px;">
+                  {% endif %}
+              </td>
+              <td class="text-center">{{ Artists.Artist_ID }}</td>
+              <td class="text-center">{{ Artists.Artist_name }}</td>
+              <td class="text-center">{{ Artists.category }}</td>
+          </tr>
+          {% endfor %}
+          {% else %}
+              <tr><td>데이터 없음</td></tr>
+          {% endif %}
+      </tbody>
+   </table>
