@@ -9,6 +9,9 @@ from .forms import Artist_create_form, test_form,rightholder_cr_form
 from django.db.models import Q 
 from django.core.paginator import Paginator
 import json
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import os
 
 # Create your views here.
 
@@ -283,6 +286,7 @@ def create_album(request):
         
     return render(request, 'maincms/album_create.html')
 
+#아티스트 리스트
 def Artists(request):
     """
     목록 출력 + 검색 필드 선택 기능
@@ -305,6 +309,8 @@ def Artists(request):
     context = {'Artist_list': Artist_list, 'query': query, 'field': field, 'valid_fields': valid_fields}
     return render(request, 'maincms/Artist_list.html', context)
 
+
+#아티스트 저장 폼 임
 def create_artist(request):
 
     num = create_Artist_profile.objects.last().id
@@ -319,6 +325,15 @@ def create_artist(request):
             create = form.save(commit=False)
             create.create_date = timezone.now()
             create.Artist_ID = Aritist_idf
+
+            # 이미지 파일이 있는 경우 파일명 변경 처리
+            if 'Artist_image' in request.FILES:
+                uploaded_image = request.FILES['Artist_image']
+                new_filename = f"{Aritist_idf}.jpg"
+
+                # 기존 저장 경로를 유지하면서 파일명 변경
+                uploaded_image.name = new_filename  # 파일명만 변경
+
             create.save()
             return redirect('maincms:Artists')
     else:

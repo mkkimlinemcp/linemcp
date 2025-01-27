@@ -39,6 +39,7 @@ div {
     padding: 2px;
 }
 .info-field-start {
+    width: 100%;
     font-size: 13px;
     display: flex;
     padding: 5px;
