@@ -133,8 +133,8 @@
         </div>
     </div>
     <h5 class="fw-bold">디스크 / 트랙 정보</h5>
-    <div class="info-field mb-5" id="service_option">
-        <div class="label-field"><i class="bi bi-check check"></i>디스크 수</div><input class="form-ck" type="text" id="disc_total_num" style="width: 31px;" value="1">
+    <div class="info-field-start mb-5" id="service_option">
+        <div class="label-field"><i class="bi bi-check check"></i>디스크 번호</div><input class="form-ck" type="text" id="disc_total_num" style="width: 31px;" value="1">
         <div class="label-field"><i class="bi bi-check check"></i>트랙 수</div><input class="form-ck" type="text" id="track_total_num" style="width: 31px;" value="1">
         <a class="btn btn-primary btn-sm my-1" role="button" id="generate" style="margin-left: 30px;">디스크 만들기</a>
     </div>
@@ -148,14 +148,14 @@
             <th scope="col" class="text-center" style="width:100px;">상세보기</th>
             </tr>
         </thead>
-        <!-- 반복 규정된 테이블 -->
+        <!-- 반복 규정된 테이블
         <tbody id="1_1">
             <tr>
                 <th class='text-center' ><input class="form-ck" type="number" id="disk_no_1" name="disk_no[]" style="width: 31px;"></div></th>
                 <th class='text-center' ><input class="form-ck" type="number" id="track_no_1" name="track_no[]" style="width: 31px;"></div></th>
                 <th class='text-center' id="song_title_view_1_1"></th>
                 <th class='text-center' id="artist_view_1_1"></th>
-                <th class='text-center'><i class="bi bi-chevron-up icon" data-target="1_1_detail"></i></td>
+                <th class='text-center'><i class="bi bi-chevron-up icon" data-target="detail_1_1"></i></td>
             </tr>
             <tr id="detail_1_1">
                 <th colspan='3'>
@@ -206,11 +206,11 @@
                 </th>
                 <th class="text-center">
                     <div class="info-field-column">
-                        <a class='btn btn-danger btn-sm'>트랙 삭제</a>
+                        <a class='btn btn-danger btn-sm delete-btn'>트랙 삭제</a>
                     </div>
                 </th>
             </tr>
-        </tbody>
+        </tbody> -->
     </table>
     <div class="info-field"><button class="btn btn-primary" type="submit" id="album_add">등록하기</button></div>
 </div>
@@ -464,10 +464,10 @@ function setupModal(modalId, modelEndpoint, options = {}) {
     });
   
     // input 클릭으로 모달 열기
-    $(`[data-modal="${modalId}"]`).on('click', function () {
-      targetInput = $(this); // 클릭한 input 요소 저장
-      modal.fadeIn(); // 모달 열기
-      loadData(); // 데이터 로드
+    $(document).on('click', `[data-modal="${modalId}"]`, function () {
+        targetInput = $(this); // 클릭한 input 요소 저장
+        modal.fadeIn(); // 모달 열기
+        loadData(); // 데이터 로드
     });
 
     // 닫기 버튼 클릭 이벤트

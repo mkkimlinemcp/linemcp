@@ -7,8 +7,9 @@ $(document).ready(function () {
             alert("두 숫자를 1 이상의 값으로 입력하세요.");
             return;
         }
-
-        $("#result-table tbody").remove();
+        if (outerLoop == 1) {
+            $("#result-table tbody").remove();
+        }
         let j = 1;
         const tbody = $("<tbody></tbody>").attr("id", `${outerLoop}_${j}`);
 
@@ -81,7 +82,7 @@ $(document).ready(function () {
                 </th>
                 <th class="text-center">
                     <div class="info-field-column">
-                        <a class='btn btn-danger btn-sm'>트랙 삭제</a>
+                        <a class='btn btn-danger btn-sm delete-btn'>트랙 삭제</a>
                     </div>
                 </th>
             </tr>`);
@@ -90,7 +91,9 @@ $(document).ready(function () {
 
         // 결과 테이블에 추가
         $("#result-table").append(tbody);
-
+        $("#generate").text("디스크 추가");
+        addup = parseInt(outerLoop) + 1;
+        $("#disc_total_num").val(addup);
         $(document).ready(function () {
             // 실시간 변경 시 상위 값 갱신
             $(".song-title").on("input", function () {
@@ -105,6 +108,20 @@ $(document).ready(function () {
             });
         });
     
+    });
+    //트랙삭제
+    $(document).on("click", ".delete-btn", function() {
+        $(this).closest("tr").prev("tr").addBack().remove();
+    });
+    //상세 숨기기 보이기
+    $(document).on("click", ".icon", function() {
+        let targetId = $(this).data("target"); // data-target 속성 값 가져오기
+        let detailRow = $("#" + targetId); // 해당하는 <tr> 찾기
+    
+        detailRow.stop().slideToggle(300); // 부드럽게 슬라이드 업/다운 (300ms)
+    
+        // 아이콘 회전 애니메이션
+        $(this).toggleClass("rotated");
     });
     // 오디오 파일 길이 계산
     $(document).on("change", ".song_file", function () {

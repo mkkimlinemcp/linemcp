@@ -93,7 +93,7 @@ div {
 .icon {
     display: inline-block;
     cursor: pointer;
-    transition: transform 0.3s ease, color 0.3s ease; /* 회전 및 색상 애니메이션 */
+    transition: transform 0.3s ease-in-out;
     color: black; /* 기본 색상 */
 }
 .icon.rotated {
