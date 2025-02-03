@@ -1,7 +1,7 @@
 {% extends 'maincms_base.html' %}
 {% block content %}
 {% include "maincms/navbar.html" %}
-
+<meta name="csrf-token" content="{{ csrf_token }}">
 <!-- 앨범 정보 상자 -->
 <div class="container-lg my-4 py-3">
     <h5 class="fw-bold">앨범 정보</h5>
@@ -148,7 +148,7 @@
             <th scope="col" class="text-center" style="width:100px;">상세보기</th>
             </tr>
         </thead>
-        <!-- 반복 규정된 테이블
+        <!-- 반복 규정된 테이블 
         <tbody id="1_1">
             <tr>
                 <th class='text-center' ><input class="form-ck" type="number" id="disk_no_1" name="disk_no[]" style="width: 31px;"></div></th>
@@ -221,7 +221,7 @@
         <h5 class="fw-bold mb-2">아티스트 검색</h5>
         <div class="info-field-start">
             <input type="text" class="form-tr">
-            <button class="btn btn-primary btn-sm ">검색</button>
+            <button class="btn btn-primary btn-sm search">검색</button>
         </div>
         <h5 class="fw-bold mb-2">아티스트 리스트</h5>
         <ul class="list-group artist-list" >
@@ -288,20 +288,7 @@
         </div>
     </div>
 </div>
-<script>
-$(document).ready(function () {
-    $(".icon").click(function () {
-        // 아이콘 회전 및 색상 변경
-        $(this).toggleClass("rotated");
 
-        // data-target 속성에서 연결된 tr의 ID 가져오기
-        const targetId = $(this).data("target");
-
-        // 해당 ID를 가진 tr 표시/숨김 처리
-        $("#" + targetId).toggleClass("hidden-row");
-    });
-});
-</script>
 <script>
 $(document).ready(function () {
     $("#setgenreButton").on("click", function (e) {
@@ -498,64 +485,6 @@ function setupModal(modalId, modelEndpoint, options = {}) {
   });
   
 </script>
-<script>
-$("#album_add").click(function() {
-    console.log("Album add button clicked!"); // 클릭 이벤트 확인
 
-    const formData = new FormData();
-    formData.append('album_title', $("input[name='album_title']").val());
-    formData.append('album_title_en', $("input[name='album_title_en']").val());
-    formData.append('album_artist', $("input[name='album_artist']").val());
-    formData.append('album_genre', $("select[name='album_genre']").val());
-    formData.append('album_Categ', $("select[name='album_Categ']").val());
-    formData.append('album_country', $("select[name='album_country']").val());
-    formData.append('startdate', $("input[name='startdate']").val());
-    formData.append('opendate', $("input[name='opendate']").val());
-    formData.append('service_time', $("select[name='service_time']").val());
-    formData.append('album_copyright', $("input[name='album_copyright']").val());
-    formData.append('album_publish', $("input[name='album_publish']").val());
-    formData.append('service_area', $("select[name='service_area']").val());
-    formData.append('excluded', $("input[name='excluded']").val());
-    formData.append('service_lang', $("select[name='service_lang']").val());
-    formData.append('UPC', $("input[name='UPC']").val());
-    formData.append('UCI', $("input[name='UCI']").val());
-    formData.append('YT_service', $("select[name='YT_service']").val());
-    formData.append('status', '등록');
-    
-    // 디스크 및 트랙 정보 수집
-    const discTotal = parseInt($("#disc_total_num").val());
-    const trackTotal = parseInt($("#track_total_num").val());
-
-    let DiscNos = [];  // 디스크 번호 리스트
-    let trackNos = [];  // 트랙 번호 리스트
-    let songTitles = [];  // 곡 제목 리스트
-    let artistNames = [];  // 아티스트 리스트
-    let trackGenres = [];  // 트랙 장르 리스트
-    let trackLangs = [];  // 서비스 언어 리스트
-    
-    for (let disc = 1; disc <= discTotal; disc++) {
-        for (let track = 1; track <= trackTotal; track++) {
-            // 디스크 및 트랙 정보 수집
-            const track_no = $(`#track_no_${track}`).val();
-            const songTitle = $(`#song_title_view_${disc}_${track}`).text().trim();
-            const artist = $(`#artist_view_${disc}_${track}`).text().trim();
-            const trackGenre = $(`#detail_${disc}_${track} select[name='track_genre[]']`).val();
-            const trackLang = $(`#detail_${disc}_${track} select[name='track_lang[]']`).val();
-
-            // 리스트에 값 추가
-            trackNos.push(track_no);
-            songTitles.push(songTitle);
-            artistNames.push(artist);
-            trackGenres.push(trackGenre);
-            trackLangs.push(trackLang);
-        }
-    }
-
-    // FormData의 내용을 출력하기
-    for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-    }
-});
-</script>
 
 {% endblock %}

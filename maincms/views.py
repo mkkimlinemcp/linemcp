@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from .forms import Artist_create_form, test_form,rightholder_cr_form
+from .forms import Artist_create_form, test_form,rightholder_cr_form,Create_album_form
 from django.db.models import Q 
 from django.core.paginator import Paginator
 import json
@@ -157,134 +157,123 @@ def test_go(request):
 # 앨범 등록 기능 개발 중
 @csrf_exempt
 def create_album(request):
-    if request.method == 'POST':
-        album_title = request.POST.get('album_title')
-        album_title_en = request.POST.get('album_title_en')
-        album_artist = request.POST.get('album_artist')
-        album_genre = request.POST.get('album_genre')
-        album_Categ = request.POST.get('album_Categ')
-        album_country = request.POST.get('album_country')
-        startdate = request.POST.get('startdate')
-        opendate = request.POST.get('opendate')
-        service_time = request.POST.get('service_time')
-        album_copyright = request.POST.get('album_copyright')
-        album_publish = request.POST.get('album_publish')
-        service_area = request.POST.get('service_area')
-        excluded = request.POST.get('excluded')
-        UPC_code = request.POST.get('UPC')
-        UCI_code = request.POST.get('UCI')
-        YT_service = request.POST.get('YT_service')
-        status = request.POST.get('status')
-
-        #앨범코드 작성
-        num = Album.objects.last().id
-        num = num - 1
-        list = Album.objects.values()
-        code = list[num]['album_code']
-
-        if code == 0:
-            code = "0001"
-        else:
-            code = code[7:]
-            code = int(code) + 1
-            code = str(code)
-            code = "{0:0>4}".format(code)
-
-        if album_Categ == "정규":
-            tag = "03"
-        elif album_Categ == "싱글":
-            tag = "01"
-        elif album_Categ == "EP":
-            tag = "02"
-        else:
-            tag = "04"
-        ddd = opendate[2:4]
-        album_code = "LA" + ddd + tag + "-" + code
-        
-        album = Album.objects.create(
-            album_title = album_title,
-            album_title_en = album_title_en,
-            album_code = album_code,
-            album_artist = album_artist,
-            album_genre = album_genre,
-            album_Categ = album_Categ,
-            album_country = album_country,
-            startdate = startdate,
-            opendate = opendate,
-            service_time = service_time,
-            album_copyright = album_copyright,
-            album_publish = album_publish,
-            service_area = service_area,
-            excluded = excluded,
-            UPC_code = UPC_code,
-            UCI_code = UCI_code,
-            YT_service = YT_service,
-            status = status,
-        )
-
-        disk_no = request.POST.getlist('disk_no[]')
-        track_no = request.POST.getlist('track_no[]')
-        song_title = request.POST.getlist('song_title[]')
-        song_artist = request.POST.getlist('song_artist[]')
-        track_genre = request.POST.getlist('track_genre[]')
-        track_lang = request.POST.getlist('track_lang[]')
-        title_song = request.POST.getlist('title_song[]')
-        adult = request.POST.getlist('adult[]')
-        tr_opendate = request.POST.getlist('tr_opendate[]')
-        track_length = request.POST.getlist('track_length[]')
-        lyricist = request.POST.getlist('lyricist[]')
-        composer = request.POST.getlist('composer[]')
-        arranger = request.POST.getlist('arranger[]')
-        with_artist = request.POST.getlist('with_artist[]')
-        featured = request.POST.getlist('featured[]')
-        ISRC = request.POST.getlist('ISRC[]')
-
-        #트랙코드 생성
-        tnum = Track.objects.last().id
-        tnum = tnum - 1
-        tlist = Track.objects.values()
-        tcode = tlist[num]['Track_code']
-        if tcode == 0:
-            tcode = "0001"
-        else:
-            tcode = tcode[8:]
-            tcode = int(tcode) + 1
-            tcode = str(tcode)
-            tcode = "{0:0>4}".format(tcode)
-
-        ttt = len(track_no)
-        Track_code_bd = "L" + ddd + tag + ttt +"-"
-        Track_code = []
-
-        for j in range(len(track_no)):
-            Track_code.append(Track_code_bd + tcode)
-            tcode = int(tcode) + 1
-            tcode = str(tcode)
-            tcode = "{0:0>4}".format(tcode)
-
-        # 데이터 저장 예시
-        for i in range(len(track_no)):
-            Track.objects.create(
-                disk_no = disk_no[i],
-                track_no = track_no[i],
-                track_code = Track_code[i],
-                song_title = song_title[i],
-                song_artist = song_artist[i],
-                track_genre = track_genre[i],
-                track_lang = track_lang[i],
-                title_song = title_song[i],
-                adult = adult[i],
-                tr_opendate = tr_opendate[i],
-                track_length = track_length[i],
-                lyricist = lyricist[i],
-                composer = composer[i],
-                arranger = arranger[i],
-                with_artist = with_artist[i],
-                featured = featured[i],
-                ISRC = ISRC[i],
-            )
         
     return render(request, 'maincms/album_create.html')
+
+
+@csrf_exempt
+def save_album(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)  # JSON 데이터 파싱
+            album_data = data.get("album")
+            track_data = data.get("tracks", [])
+
+            album_Categ = album_data.get("album_Categ", "")
+            opendate = album_data.get("opendate", "")
+            track_no = album_data.get("track_no", "")
+
+            #앨범코드 작성
+            num = Album.objects.last().id
+            num = num - 1
+            list = Album.objects.values()
+            code = list[num]['album_code']
+
+            if code == 0:
+                code = "0001"
+            else:
+                code = code[7:]
+                code = int(code) + 1
+                code = str(code)
+                code = "{0:0>4}".format(code)
+
+            if album_Categ == "정규":
+                tag = "03"
+            elif album_Categ == "싱글":
+                tag = "01"
+            elif album_Categ == "EP":
+                tag = "02"
+            else:
+                tag = "04"
+            ddd = opendate[2:4]
+            ALBC = "LA" + ddd + tag + "-" + code
+
+            # 앨범 저장
+            album = Album.objects.create(
+                album_code=ALBC,  # 자동 코드 생성
+                album_title=album_data["album_title"],
+                album_title_en=album_data["album_title_en"],
+                album_artist=album_data["album_artist"],
+                album_genre=album_data["album_genre"],
+                album_Categ=album_data["album_Categ"],
+                album_country=album_data["album_country"],
+                startdate=album_data["startdate"],
+                opendate=album_data["opendate"],
+                service_time=album_data["service_time"],
+                album_copyright=album_data["album_copyright"],
+                album_publish=album_data["album_publish"],
+                service_area=album_data["service_area"],
+                excluded=album_data["excluded"],
+                service_lang=album_data["service_lang"],
+                UPC_code=album_data["UPC_code"],
+                UCI_code=album_data["UCI_code"],
+                YT_service=album_data["YT_service"],
+                status=album_data["status"],
+            )
+
+            #트랙코드 생성
+            tnum = Track.objects.last().id
+            tnum = tnum - 1
+            tlist = Track.objects.values()
+            tcode = tlist[num]['Track_code']
+            if tcode == 0:
+                tcode = "0001"
+            else:
+                tcode = tcode[8:]
+                tcode = int(tcode) + 1
+                tcode = str(tcode)
+                tcode = "{0:0>4}".format(tcode)
+
+            ttt = len(track_no)
+            Track_code_bd = "L" + ddd + tag + ttt +"-"
+            Track_code_list = []
+
+            for j in range(len(track_no)):
+                Track_code_list.append(Track_code_bd + tcode)
+                tcode = int(tcode) + 1
+                tcode = str(tcode)
+                tcode = "{0:0>4}".format(tcode)
+
+            # 트랙 저장
+            for idx, track in enumerate(track_data):
+                Track.objects.create(
+                    album=album,
+                    disk_no=int(track["disk_no"]),
+                    track_no=int(track["track_no"]),
+                    track_code=Track_code_list[idx],  # ✅ 각 트랙에 개별적인 코드 할당
+                    song_title=track["song_title"],
+                    song_artist=track["song_artist"],
+                    track_genre=track["track_genre"],
+                    track_lang=track["track_lang"],
+                    title_song=track["title_song"],
+                    adult=track["adult"],
+                    tr_opendate=track["tr_opendate"],
+                    track_length=track["track_length"],
+                    lyricist=track["lyricist"],
+                    composer=track["composer"],
+                    arranger=track["arranger"],
+                    with_artist=track["with_artist"],
+                    featured=track["featured"],
+                    ISRC=track["ISRC"],
+                )
+
+            return JsonResponse({"message": "앨범과 트랙이 성공적으로 저장되었습니다!"}, status=200)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
 
 #아티스트 리스트
 def Artists(request):

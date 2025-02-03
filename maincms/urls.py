@@ -21,5 +21,6 @@ urlpatterns = [
     path('rightholder_list.html', views.rightholder_list_view, name='rightholder_view'),
     path('api/artists/', views.get_artist_profiles, name='get_artist_profiles'),
     path('api/rightholder/', views.get_rightholder_profiles, name='get_rightholder_profiles'),
+    path("save_album/", views.save_album, name="save_album"),
 ] 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
