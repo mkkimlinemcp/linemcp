@@ -22,6 +22,11 @@ $(document).on("click", "#album_add", function (e) {
         status: "등록",
     };
 
+    let rightData = {
+        rightholder: $("input[name='rightholder_code']").val(),
+        User_Fees : $("input[name='allocation_rate']").val(),
+    };
+        
     let trackData = [];
     $("#result-table tbody").each(function () {
         let row = $(this);
@@ -49,7 +54,7 @@ $(document).on("click", "#album_add", function (e) {
     $.ajax({
         type: "POST",
         url: "save_album/",  // Django URL
-        data: JSON.stringify({ album: albumData, tracks: trackData }),
+        data: JSON.stringify({ album: albumData, tracks: trackData, rights: rightData}),
         contentType: "application/json",
         headers: {
             "X-CSRFToken": getCSRFToken() // CSRF 토큰 설정 (아래 함수 참고)

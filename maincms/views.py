@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import create_Artist_profile, album_genres, album_Category, test, rightholder_cr, Album, Track
+from .models import create_Artist_profile, album_genres, album_Category, test, rightholder_cr, Album, Track,Accounting_base
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -31,7 +31,7 @@ def get_artist_profiles(request):
         )
 
     # 페이징 처리
-    paginator = Paginator(artists.values('Artist_name','Artist_ID','Artist_image','category'), page_size)
+    paginator = Paginator(artists.values('Artist_name', 'Artist_ID', 'Artist_image', 'category').order_by('id'),page_size)
 
     try:
         artists_page = paginator.page(page)
@@ -63,7 +63,7 @@ def get_rightholder_profiles(request):
         )
 
     # 페이징 처리
-    paginator = Paginator(rightholder.values('user_name','user_code','email','user_level'), page_size)
+    paginator = Paginator(rightholder.values('user_name','user_code','email','user_level').order_by('id'), page_size)
 
     try:
         rightholder_page = paginator.page(page)
@@ -168,10 +168,13 @@ def save_album(request):
             data = json.loads(request.body)  # JSON 데이터 파싱
             album_data = data.get("album")
             track_data = data.get("tracks", [])
+            right_data = data.get("rights")
 
             album_Categ = album_data.get("album_Categ", "")
             opendate = album_data.get("opendate", "")
             track_no = album_data.get("track_no", "")
+            user_c = right_data.get("rightholder")
+            user_ac = right_data.get("User_Fees")
 
             #앨범코드 작성
             num = Album.objects.last().id
@@ -266,6 +269,27 @@ def save_album(request):
                     featured=track["featured"],
                     ISRC=track["ISRC"],
                 )
+
+            #정산정보 저장
+                user_ac = float(user_ac) * 0.01
+                com_ac = 1 - float(user_ac)
+
+                user = rightholder_cr.objects.get(user_code=user_c)
+                albums_list = user.albums
+                if ALBC not in albums_list:
+                    albums_list.append(ALBC)
+                    user.albums = albums_list  # JSONField 업데이트
+                    user.save()  # 변경사항 저장
+                    return JsonResponse({"message": "앨범이 성공적으로 추가되었습니다.", "albums": user.albums}, status=200)
+                else:
+                    return JsonResponse({"message": "이미 존재하는 앨범입니다.", "albums": user.albums}, status=400)
+            
+            Accounting_base.objects.create(
+                Album_code = ALBC,
+                rightholder_code = user_c,
+                User_Fees = user_ac,
+                company_fees = com_ac,
+            )
 
             return JsonResponse({"message": "앨범과 트랙이 성공적으로 저장되었습니다!"}, status=200)
 

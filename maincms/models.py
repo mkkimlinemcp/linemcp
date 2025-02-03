@@ -10,7 +10,7 @@ class create_Artist_profile(models.Model):
     Artist_name_en = models.TextField(blank=True,)
     sex = models.CharField(max_length=200)
     category = models.TextField()
-    Albums = models.TextField(blank=True,)
+    Albums = models.TextField(default=list, blank=True,)
     Melon_ID = models.CharField(max_length=200, blank=True,)
     Apple_url = models.TextField(blank=True,)
     Spotify_ID = models.CharField(max_length=22,blank=True,)
@@ -54,7 +54,7 @@ class rightholder_cr(models.Model):
     user_id = models.TextField(blank=True,)
     user_code = models.TextField(blank=True,)
     user_name = models.TextField()
-    email = models.TextField()
+    email = models.EmailField(unique=True)
     phone = models.TextField()
     bank_name = models.TextField(blank=True,)
     account_number = models.TextField(blank=True,)
@@ -66,7 +66,7 @@ class rightholder_cr(models.Model):
     expiration_date = models.TextField(blank=True,)
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(auto_now=True)
-    albums = models.JSONField(default=list)
+    albums = models.JSONField(default=list, blank=True,)
     
     def __str__(self):
         return self.user_name
@@ -125,9 +125,9 @@ class Accounting_base(models.Model):
     rightholder_code = models.IntegerField()
     company_fees = models.FloatField()
     User_Fees = models.FloatField()
-    Settlement_Status = models.BooleanField(blank=True,)
-    Settlement_user = models.JSONField(default=list)
-    Settlement_rate = models.JSONField(default=list)
+    Settlement_Status = models.BooleanField(default=False)
+    Settlement_user = models.JSONField(default=list, blank=True,)
+    Settlement_rate = models.JSONField(default=list, blank=True,)
 
     def __str__(self):
-            return self.Album_code, self.rightholder_code, self.User_Fees, self.Settlement_Status
+        return f"Album: {self.Album_code}, Rightholder: {self.rightholder_code}, User Fees: {self.User_Fees}, Status: {self.Settlement_Status}"
