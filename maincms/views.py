@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import create_Artist_profile, album_genres, album_Category, test, rightholder_cr, Album, Track,Accounting_base
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -11,7 +11,9 @@ from django.core.paginator import Paginator
 import json
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+from django.conf import settings
 import os
+
 
 # Create your views here.
 
@@ -176,30 +178,48 @@ def save_album(request):
             user_c = right_data.get("rightholder")
             user_ac = right_data.get("User_Fees")
 
-            #앨범코드 작성
-            num = Album.objects.last().id
-            num = num - 1
-            list = Album.objects.values()
-            code = list[num]['album_code']
+            # 앨범 코드 작성
+            last_album = Album.objects.last()
+            num = last_album.id if last_album else 0  # None 방지
 
-            if code == 0:
+            if num is None:
+                num = 0
+            else:
+                num -= 1
+
+            # Album 객체 목록 가져오기
+            album_list = list(Album.objects.values())
+
+            if num < 0 or num >= len(album_list):  # 인덱스 유효성 체크
                 code = "0001"
             else:
-                code = code[7:]
-                code = int(code) + 1
-                code = str(code)
-                code = "{0:0>4}".format(code)
+                code = album_list[num].get('album_code', "0001")
 
-            if album_Categ == "정규":
-                tag = "03"
-            elif album_Categ == "싱글":
-                tag = "01"
-            elif album_Categ == "EP":
-                tag = "02"
+            # 코드 변환 로직
+            if str(code) == "0" or not code:
+                code = "0001"
+            elif len(code) >= 7:
+                code = code[7:]
+                code = str(int(code) + 1).zfill(4)
+
+            # 앨범 카테고리 변환
+            album_Categ = album_Categ or "기타"
+            tag_dict = {
+                "정규": "03",
+                "싱글": "01",
+                "EP": "02"
+            }
+            tag = tag_dict.get(album_Categ, "04")
+
+            # 개봉일 처리
+            if opendate and len(opendate) >= 4:
+                ddd = opendate[2:4]
             else:
-                tag = "04"
-            ddd = opendate[2:4]
-            ALBC = "LA" + ddd + tag + "-" + code
+                ddd = "00"
+
+            # 최종 코드 조합
+            ALBC = f"LA{ddd}{tag}-{code}"
+            print(ALBC)  # 생성된 앨범 코드 출력
 
             # 앨범 저장
             album = Album.objects.create(
@@ -224,33 +244,47 @@ def save_album(request):
                 status=album_data["status"],
             )
 
-            #트랙코드 생성
-            tnum = Track.objects.last().id
-            tnum = tnum - 1
-            tlist = Track.objects.values()
-            tcode = tlist[num]['Track_code']
-            if tcode == 0:
+            # 트랙 코드 생성
+            last_track = Track.objects.last()
+            tnum = last_track.id if last_track else 0  # None 방지
+
+            if tnum is None:
+                tnum = 0
+            else:
+                tnum -= 1
+
+            # Track 객체 목록 가져오기
+            track_list = list(Track.objects.values())
+
+            if tnum < 0 or tnum >= len(track_list):  # 인덱스 유효성 체크
                 tcode = "0001"
             else:
-                tcode = tcode[8:]
-                tcode = int(tcode) + 1
-                tcode = str(tcode)
-                tcode = "{0:0>4}".format(tcode)
+                tcode = track_list[tnum].get('Track_code', "0001")
 
-            ttt = len(track_no)
-            Track_code_bd = "L" + ddd + tag + ttt +"-"
+            # 코드 변환 로직
+            if str(tcode) == "0" or not tcode:
+                tcode = "0001"
+            elif len(tcode) >= 8:
+                tcode = tcode[8:]
+                tcode = str(int(tcode) + 1).zfill(4)
+
+            # 트랙 코드 기본 문자열 생성
+            ttt = str(len(track_no))  # 정수를 문자열로 변환
+            Track_code_bd = f"L{ddd}{tag}{ttt}-"
+
+            # 트랙 코드 리스트 생성
             Track_code_list = []
 
             for j in range(len(track_no)):
                 Track_code_list.append(Track_code_bd + tcode)
-                tcode = int(tcode) + 1
-                tcode = str(tcode)
-                tcode = "{0:0>4}".format(tcode)
+                tcode = str(int(tcode) + 1).zfill(4)  # 간단하게 변환
+
+            alb_id = Album.objects.filter(album_code=ALBC).values_list('id', flat=True).first()
 
             # 트랙 저장
             for idx, track in enumerate(track_data):
                 Track.objects.create(
-                    album=album,
+                    album_id=alb_id,
                     disk_no=int(track["disk_no"]),
                     track_no=int(track["track_no"]),
                     track_code=Track_code_list[idx],  # ✅ 각 트랙에 개별적인 코드 할당
@@ -280,7 +314,10 @@ def save_album(request):
                     albums_list.append(ALBC)
                     user.albums = albums_list  # JSONField 업데이트
                     user.save()  # 변경사항 저장
-                    return JsonResponse({"message": "앨범이 성공적으로 추가되었습니다.", "albums": user.albums}, status=200)
+                    return JsonResponse({
+                        "message": "앨범이 성공적으로 저장되었습니다.",
+                        "album_code": ALBC  # ✅ album_code를 응답 데이터에 포함
+                    }, status=200)
                 else:
                     return JsonResponse({"message": "이미 존재하는 앨범입니다.", "albums": user.albums}, status=400)
             
@@ -298,7 +335,7 @@ def save_album(request):
 
     return JsonResponse({"error": "Invalid request method"}, status=400)
 
-
+#아티스트 페이지 내용
 #아티스트 리스트
 def Artists(request):
     """
@@ -322,30 +359,30 @@ def Artists(request):
     context = {'Artist_list': Artist_list, 'query': query, 'field': field, 'valid_fields': valid_fields}
     return render(request, 'maincms/Artist_list.html', context)
 
-
-#아티스트 저장 폼 임
+#아티스트 저장 폼
 def create_artist(request):
 
     num = create_Artist_profile.objects.last().id
     num = num - 1
     list = create_Artist_profile.objects.values()
-    Aritist_idf = list[num]['Artist_ID']
-    Aritist_idf = int(Aritist_idf) + 1
+    Artist_idf = list[num]['Artist_ID']
+    Artist_idf = int(Artist_idf) + 1
 
     if request.method == 'POST':
         form = Artist_create_form(request.POST, request.FILES)
         if form.is_valid():
             create = form.save(commit=False)
             create.create_date = timezone.now()
-            create.Artist_ID = Aritist_idf
+            create.Artist_ID = Artist_idf
 
-            # 이미지 파일이 있는 경우 파일명 변경 처리
             if 'Artist_image' in request.FILES:
                 uploaded_image = request.FILES['Artist_image']
-                new_filename = f"{Aritist_idf}.jpg"
-
-                # 기존 저장 경로를 유지하면서 파일명 변경
-                uploaded_image.name = new_filename  # 파일명만 변경
+                new_filename = f"{Artist_idf}.jpg"
+                file_path = os.path.join('Artist_images/', new_filename)
+                
+                # 새 파일로 저장
+                file_saved_path = default_storage.save(file_path, ContentFile(uploaded_image.read()))
+                create.Artist_image = file_saved_path
 
             create.save()
             return redirect('maincms:Artists')
@@ -353,6 +390,77 @@ def create_artist(request):
         form = Artist_create_form()
     context = {'form' : form}
     return render(request, 'maincms/Artist_create.html', context)
+
+#아티스트 디테일
+def artist_detail(request, artist_id):
+    """
+    아티스트 디테일 내용 출력
+    """
+    artist = create_Artist_profile.objects.get(id=artist_id)
+    context = {'artist_d' : artist}
+    return render(request, 'maincms/artist_detail.html', context)
+
+def artist_update(request, artist_id):
+    """
+    아티스트 정보 수정 (이전 이미지 삭제 후 새로운 이미지 저장)
+    """
+    artist = get_object_or_404(create_Artist_profile, id=artist_id)
+
+    if request.method == "POST":
+        artist.Artist_name = request.POST.get("Artist_name")
+        artist.Artist_name_en = request.POST.get("Artist_name_en")
+        artist.sex = request.POST.get("sex")
+        artist.category = request.POST.get("category")
+        artist.Apple_url = request.POST.get("Apple_url")
+        artist.Spotify_ID = request.POST.get("Spotify_ID")
+        artist.Melon_ID = request.POST.get("Melon_ID")
+        artist.genie_url = request.POST.get("genie_url")
+        artist.bugs_url = request.POST.get("bugs_url")
+        artist.flo_url = request.POST.get("flo_url")
+        artist.vibe_url = request.POST.get("vibe_url")
+        artist.Youtube_ID = request.POST.get("Youtube_ID")
+        artist.Artist_ID = request.POST.get("Artist_ID")
+
+        # 새로운 이미지 업로드 시 처리
+        if "Artist_image" in request.FILES:
+            new_image = request.FILES["Artist_image"]
+            new_image_name = f"{artist.Artist_ID}.jpg"  # 파일명을 Artist_ID로 변경
+            new_image_path = os.path.join("artist_images/", new_image_name)
+
+            # 기존 이미지 삭제
+            if artist.Artist_image:
+                old_image_path = str(artist.Artist_image)
+                if default_storage.exists(old_image_path):
+                    default_storage.delete(old_image_path)
+
+            # 새로운 이미지 저장
+            file_saved_path = default_storage.save(new_image_path, ContentFile(new_image.read()))
+            artist.Artist_image = file_saved_path
+
+        artist.save()
+        return redirect("artist_detail", artist_id=artist.id)  # 수정 후 다시 상세 페이지로 이동
+
+    return render(request, "maincms/artist_detail.html", {"artist_d": artist})
+
+def artist_delete(request, artist_id):
+    """
+    아티스트 삭제 (이미지도 함께 삭제)
+    """
+    artist = get_object_or_404(create_Artist_profile, id=artist_id)
+
+    if request.method == "POST":
+        # 이미지 파일 삭제 (artist_images/ 폴더 내 파일 관리)
+        if artist.Artist_image:
+            image_path = str(artist.Artist_image)  # 저장된 경로
+            if default_storage.exists(image_path):
+                default_storage.delete(image_path)
+
+        # 데이터 삭제
+        artist.delete()
+        return redirect("Artists")  # 삭제 후 리스트 페이지로 이동
+
+    return render(request, "maincms/artist_detail.html", {"artist_d": artist})
+
 
 
 #모달 출력 실패

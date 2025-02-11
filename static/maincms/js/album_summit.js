@@ -28,7 +28,7 @@ $(document).on("click", "#album_add", function (e) {
     };
         
     let trackData = [];
-    $("#result-table tbody").each(function () {
+    $("#result-table tbody tr").each(function () { 
         let row = $(this);
         let track = {
             disk_no: row.find("input[name='disk_no[]']").val(),
@@ -61,7 +61,7 @@ $(document).on("click", "#album_add", function (e) {
         },
         success: function (response) {
             alert("앨범과 트랙이 성공적으로 저장되었습니다!");
-            location.reload(); // 페이지 새로고침
+            $("input[name='album_code']").val(response.album_code);
         },
         error: function (error) {
             console.log(error);

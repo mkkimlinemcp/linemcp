@@ -50,7 +50,7 @@ $(document).ready(function () {
                                     <option value="Instrumental">Instrumental</option>
                                 </select>
                                 <div class="label-field"><i class="bi bi-check check"></i>서비스 언어</div>
-                                <select class="form-select-sm" name="track_lang[]" style="width: 203px;">
+                                <select class="form-select-sm service-lang" name="track_lang[]" style="width: 203px;">
                                     <option selected>선택하세요</option>
                                     <option value="한국어">한국어</option>
                                     <option value="영어">영어</option>
