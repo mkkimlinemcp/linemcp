@@ -375,14 +375,12 @@ def create_artist(request):
             create.create_date = timezone.now()
             create.Artist_ID = Artist_idf
 
-            if 'Artist_image' in request.FILES:
-                uploaded_image = request.FILES['Artist_image']
-                new_filename = f"{Artist_idf}.jpg"
-                file_path = os.path.join('Artist_images/', new_filename)
-                
-                # 새 파일로 저장
-                file_saved_path = default_storage.save(file_path, ContentFile(uploaded_image.read()))
-                create.Artist_image = file_saved_path
+            if "Artist_image" in request.FILES:
+                new_image = request.FILES["Artist_image"]
+                new_image_name = f"{Artist_idf}.jpg"  # 파일명을 Artist_ID로 설정
+
+                # Django의 ImageField 경로를 유지하기 위해 'Artist_images/' 생략
+                create.Artist_image.save(new_image_name, new_image)
 
             create.save()
             return redirect('maincms:Artists')
@@ -424,18 +422,16 @@ def artist_update(request, artist_id):
         # 새로운 이미지 업로드 시 처리
         if "Artist_image" in request.FILES:
             new_image = request.FILES["Artist_image"]
-            new_image_name = f"{artist.Artist_ID}.jpg"  # 파일명을 Artist_ID로 변경
-            new_image_path = os.path.join("artist_images/", new_image_name)
+            new_image_name = f"{artist.Artist_ID}.jpg"
 
             # 기존 이미지 삭제
             if artist.Artist_image:
-                old_image_path = str(artist.Artist_image)
+                old_image_path = str(artist.Artist_image)  # 저장된 경로 (Artist_images/파일명)
                 if default_storage.exists(old_image_path):
                     default_storage.delete(old_image_path)
 
-            # 새로운 이미지 저장
-            file_saved_path = default_storage.save(new_image_path, ContentFile(new_image.read()))
-            artist.Artist_image = file_saved_path
+            # 새 이미지 저장 (upload_to='Artist_images'가 적용됨)
+            artist.Artist_image.save(new_image_name, new_image)
 
         artist.save()
         return redirect("artist_detail", artist_id=artist.id)  # 수정 후 다시 상세 페이지로 이동
@@ -451,7 +447,7 @@ def artist_delete(request, artist_id):
     if request.method == "POST":
         # 이미지 파일 삭제 (artist_images/ 폴더 내 파일 관리)
         if artist.Artist_image:
-            image_path = str(artist.Artist_image)  # 저장된 경로
+            image_path = str(artist.Artist_image)  # 저장된 경로 (Artist_images/파일명)
             if default_storage.exists(image_path):
                 default_storage.delete(image_path)
 
