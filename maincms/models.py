@@ -2,7 +2,6 @@ from django.db import models
 import os
 
 
-
 # Create your models here.
 
 class create_Artist_profile(models.Model):
@@ -10,8 +9,7 @@ class create_Artist_profile(models.Model):
     Artist_name_en = models.TextField(blank=True,)
     sex = models.CharField(max_length=200)
     category = models.TextField()
-    Albums = models.TextField(default=list, blank=True,)
-    Melon_ID = models.CharField(max_length=200, blank=True,)
+    Melon_ID = models.TextField(blank=True,)
     Apple_url = models.TextField(blank=True,)
     Spotify_ID = models.CharField(max_length=22,blank=True,)
     Youtube_ID = models.CharField(max_length=24,blank=True,)
@@ -22,9 +20,15 @@ class create_Artist_profile(models.Model):
     create_date = models.DateTimeField()
     Artist_ID = models.CharField(max_length=200)
     Artist_image = models.ImageField(upload_to='Artist_images', blank=True,)
+    Albums = models.TextField(blank=True, default='[]')       # 메인 앨범
+    withAlbums = models.TextField(blank=True, default='[]')   # 참여 앨범
+    featAlbums = models.TextField(blank=True, default='[]')   # 피쳐링 앨범
+    create_date = models.DateTimeField(auto_now_add=True)
+    bio = models.TextField(blank=True,)
+    artist_etc = models.TextField(blank=True,)
 
     def __str__(self):
-        return self.Artist_ID, self.Artist_name
+        return f"{self.Artist_ID} - {self.Artist_name}"
 
 class album_genres(models.Model):
     genres = models.TextField()
@@ -92,6 +96,9 @@ class Album(models.Model):
     YT_service = models.TextField()
     status = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    with_main_artist = models.TextField(blank=True,)
+    feat_main_artist = models.TextField(blank=True,)
+    album_cover = models.ImageField(upload_to='album_data', blank=True,)
 
     def __str__(self):
         return self.album_code, self.album_title, self.album_artist
@@ -121,8 +128,8 @@ class Track(models.Model):
         return self.track_no, self.song_title
     
 class Accounting_base(models.Model):
-    Album_code = models.IntegerField()
-    rightholder_code = models.IntegerField()
+    Album_code = models.TextField()
+    rightholder_code = models.TextField()
     company_fees = models.FloatField()
     User_Fees = models.FloatField()
     Settlement_Status = models.BooleanField(default=False)

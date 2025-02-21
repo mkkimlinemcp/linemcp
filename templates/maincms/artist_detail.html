@@ -4,7 +4,7 @@
 <div class="container-lg py-3">
     {% include "maincms/ar_navbar.html" %}
     <h5 class="fw-bold">아티스트 정보</h5>
-    <form id="artist_create" method="post">
+    <form id="artist_create" method="post" enctype="multipart/form-data">
         {% csrf_token %} 
         <input type="hidden" name="artist_id" value="{{ artist_d.id }}">
         <input type="hidden" name="Artist_ID" value="{{ artist_d.Artist_ID }}">
@@ -69,8 +69,18 @@
                 <div class="label-field"><i class="bi bi-check"></i>아티스트 이미지</div><input class="form-control form-control-sm" style="width: 400px;" type="file" id="Artist_image" name="Artist_image">
             </div>
         </div>
+        <h5 class="fw-bold">아티스트 설명</h5>
         <div class="info-field-column">
-            <button type="submit" class="btn btn-primary">수정하기</button>
+            <div class="info-field-start mb-3">
+                <div class="label-field"><i class="bi bi-check"></i>아티스트 소개</div><textarea class="form-control" type="text" name="bio" rows="3"></textarea>
+            </div>
+            <div class="info-field-start mb-3">
+                <div class="label-field"><i class="bi bi-check"></i>비고</div><textarea class="form-control" type="text" name="artist_etc" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="info-field-column">
+            <button type="submit" class="btn btn-primary" formaction="{% url 'maincms:artist_update' artist_d.id %}">수정하기</button>
+            <button type="submit" class="btn btn-danger" formaction="{% url 'maincms:artist_delete' artist_d.id %}" onclick="return confirm('정말 삭제하시겠습니까?');">삭제하기</button>
         </div>
     </form>
 </div>

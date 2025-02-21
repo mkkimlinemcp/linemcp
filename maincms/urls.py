@@ -23,7 +23,7 @@ urlpatterns = [
     path('api/rightholder/', views.get_rightholder_profiles, name='get_rightholder_profiles'),
     path("save_album/", views.save_album, name="save_album"),
     path('artists/<int:artist_id>/', views.artist_detail),
-    path('artist/<int:artist_id>/update/', views.artist_update, name='artist_update'),
-    path('artist/<int:artist_id>/delete/', views.artist_delete, name='artist_delete'),
+    path('artists/<int:artist_id>/update/', views.artist_update, name='artist_update'),
+    path('artists/<int:artist_id>/delete/', views.artist_delete, name='artist_delete'),
 ] 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

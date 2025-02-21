@@ -9,6 +9,8 @@
         <div class="info-field-column" style="width: 320px;">
             <div id="cover-box">
                 <p>앨범 커버 업로드</p>
+                <input type="file" id="cover-input" style="display: none;" accept="image/*">
+                <img id="cover-preview" src="" alt="앨범 커버 미리보기" style="display:none; width: 100%; height: 100%; object-fit: cover;">
             </div>
         </div>
         <div class="info-field-column left-auto">
@@ -65,6 +67,9 @@
                 <div class="label-field"><i class="bi bi-check check"></i>발매일</div><input class="form-in datepicker" type="text" name="startdate" style="width: 203px;">
                 <div class="label-field"><i class="bi bi-check check"></i>오픈일</div><input class="form-in datepicker" id="opendate" type="text" name="opendate" style="width: 203px;">
             </div>
+            <div class="info-field">
+                <div class="label-field"><i class="bi bi-check check"></i>앨범코드</div><input class="form-in" type="text" name="albumcode" style="width: 203px;">
+            </div>
         </div>
     </div>
     <h5 class="fw-bold">아티스트 정보</h5>
@@ -77,12 +82,18 @@
                 <option value="With">참여</option>
                 <option value="Feat">피쳐링</option>
             </select>
-            <input class="form-in" type="text" data-modal="modal1" class="find_artist">
-            <input class="form-in artist-code" type="text" name="album_artist_code" style="width: 120px;">
+            <input class="form-in find_artist" type="text" data-modal="modal1">
+            <input class="form-in artist-code" type="text" name="album_artist_code" style="width: 120px;" disabled>
             <a class="btn btn-outline-danger btn-sm artist-add">추가</a>
-            <a class="btn btn-outline-success btn-sm artist-delete">삭제</a>
         </div>
     </div>
+    <input class="form-in" type="text" id="album_artist_roll" style="width: 120px; display: none;">
+    <input class="form-in" type="text" id="album_artist_id_roll" style="width: 120px; display: none;"name="main_artist_id">
+    <input class="form-in" type="text" id="album_with_artist_roll" style="width: 120px; display: none;" name="with_main_artist">
+    <input class="form-in" type="text" id="album_feat_artist_roll" style="width: 120px; display: none;" name="feat_main_artist">
+    <input class="form-in" type="text" id="album_with_artist_id_roll" style="width: 120px; display: none;" name="with_main_artist_id">
+    <input class="form-in" type="text" id="album_feat_artist_id_roll" style="width: 120px; display: none;" name="feat_main_artist_id">
+    <a class="btn btn-outline-primary btn-sm my-3" id="artist_summit" role="button" style="width: 150px;">아티스트 등록</a>
     <h5 class="fw-bold">권리자 정보</h5>
     <div class="info-field mb-5" id="user_info">
         <div class="label-field"><i class="bi bi-check check"></i>권리자 찾기</div><input class="form-in" type="text" data-modal="modal3" id="right_holder"  name="rightholder_code">
@@ -515,34 +526,81 @@ function setupModal(modalId, modelEndpoint, options = {}) {
 <script>
 $(document).ready(function () {
 
-    // ✅ 아티스트 추가 기능 (추가된 아티스트 입력란이 아래로 계속 생성)
-    $("#artist_container").on("click", ".artist-add", function () {
-        let artistRole = $(this).siblings(".artist-role").val();
+// ✅ 아티스트 추가 기능
+$("#artist_container").on("click", ".artist-add", function () {
+    let artistRole = $(this).siblings(".artist-role").val();
 
-        // ✅ 새로운 아티스트 입력 필드 추가
-        let newArtistField = `
-            <div class="info-field-start mb-2" id="artist_info">
-                <div class="label-field"><i class="bi bi-check check"></i>아티스트 찾기</div>
-                <select class="form-select-sm artist-role" style="width: 120px;">
-                    <option value="Main" ${artistRole === "Main" ? "selected" : ""}>메인</option>
-                    <option value="With" ${artistRole === "With" ? "selected" : ""}>참여</option>
-                    <option value="Feat" ${artistRole === "Feat" ? "selected" : ""}>피쳐링</option>
-                </select>
-                <input class="form-in find_artist" type="text" data-modal="modal1" >
-                <input class="form-in artist-code" type="text" name="album_artist_code" style="width: 120px;">
-                <a class="btn btn-outline-danger btn-sm artist-add">추가</a>
-                <a class="btn btn-outline-success btn-sm artist-delete">삭제</a>
-            </div>
-        `;
-        $("#artist_container").append(newArtistField);
-    });
-
-    // ✅ 아티스트 삭제 기능
-    $("#artist_container").on("click", ".artist-delete", function () {
-        $(this).closest("#artist_info").remove();
-    });
+    // ✅ 새로운 아티스트 입력 필드 추가
+    let newArtistField = `
+        <div class="info-field-start mb-2" id="artist_info">
+            <div class="label-field"><i class="bi bi-check check"></i>아티스트 찾기</div>
+            <select class="form-select-sm artist-role" style="width: 120px;">
+                <option value="Main" ${artistRole === "Main" ? "selected" : ""}>메인</option>
+                <option value="With" ${artistRole === "With" ? "selected" : ""}>참여</option>
+                <option value="Feat" ${artistRole === "Feat" ? "selected" : ""}>피쳐링</option>
+            </select>
+            <input class="form-in find_artist" type="text" data-modal="modal1" placeholder="아티스트 이름">
+            <input class="form-in artist-code" type="text" name="album_artist_code" style="width: 120px;" placeholder="아티스트 ID">
+            <a class="btn btn-outline-danger btn-sm artist-add">추가</a>
+            <a class="btn btn-outline-success btn-sm artist-delete">삭제</a>
+        </div>
+    `;
+    $("#artist_container").append(newArtistField);
 });
 
+// ✅ 아티스트 삭제 기능
+$("#artist_container").on("click", ".artist-delete", function () {
+    $(this).closest("#artist_info").remove();
+});
+
+// ✅ 아티스트 등록 기능
+$("#artist_summit").on("click", function () {
+    let mainArtistNames = [];
+    let mainArtistIDs = [];
+    let withArtistNames = [];
+    let withArtistIDs = [];
+    let featArtistNames = [];
+    let featArtistIDs = [];
+
+    // ✅ 모든 아티스트 입력 필드 순회
+    $("#artist_container .info-field-start").each(function () {
+        let artistName = $(this).find(".find_artist").val().trim();
+        let artistID = $(this).find(".artist-code").val().trim();
+        let artistRole = $(this).find(".artist-role").val();
+
+        if (artistRole === "Main" && artistName && artistID) {
+            mainArtistNames.push(artistName);
+            mainArtistIDs.push(artistID);
+        } else if (artistRole === "With" && artistName && artistID) {
+            withArtistNames.push(artistName);
+            withArtistIDs.push(artistID);
+        } else if (artistRole === "Feat" && artistName && artistID) {
+            featArtistNames.push(artistName);
+            featArtistIDs.push(artistID);
+        }
+    });
+
+    // ✅ 쉼표로 구분된 문자열로 변환
+    let joinedMainNames = mainArtistNames.join(", ");
+    let joinedMainIDs = mainArtistIDs.join(", ");
+    let joinedWithNames = withArtistNames.join(", ");
+    let joinedWithIDs = withArtistIDs.join(", ");
+    let joinedFeatNames = featArtistNames.join(", ");
+    let joinedFeatIDs = featArtistIDs.join(", ");
+
+    // ✅ 각 필드에 값 입력
+    $("#album_artist").val(joinedMainNames);            // ✅ 메인 아티스트 이름 (추가)
+    $("#album_artist_roll").val(joinedMainNames);       // 메인 아티스트 이름 목록
+    $("#album_artist_id_roll").val(joinedMainIDs);      // 메인 아티스트 ID
+    $("#album_with_artist_roll").val(joinedWithNames);  // 참여 아티스트 이름
+    $("#album_with_artist_id_roll").val(joinedWithIDs); // 참여 아티스트 ID
+    $("#album_feat_artist_roll").val(joinedFeatNames);  // 피쳐링 아티스트 이름
+    $("#album_feat_artist_id_roll").val(joinedFeatIDs); // 피쳐링 아티스트 ID
+
+    // ✅ 결과 확인용 콘솔 로그
+
+});
+});
 
 </script>
 

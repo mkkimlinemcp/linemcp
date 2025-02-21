@@ -171,54 +171,60 @@ def save_album(request):
             album_data = data.get("album")
             track_data = data.get("tracks", [])
             right_data = data.get("rights")
+            artist_data = data.get("artists")
 
             album_Categ = album_data.get("album_Categ", "")
+            album_code = album_data.get("albumcode", "")
             opendate = album_data.get("opendate", "")
-            track_no = album_data.get("track_no", "")
+            track_no = [t.get("track_no", 0) for t in track_data]
             user_c = right_data.get("rightholder")
             user_ac = right_data.get("User_Fees")
 
+            if not track_data:
+                return JsonResponse({"error": "트랙 정보가 없습니다."}, status=400)
+            
             # 앨범 코드 작성
-            last_album = Album.objects.last()
-            num = last_album.id if last_album else 0  # None 방지
+            #last_album = Album.objects.last()
+            #num = last_album.id if last_album else 0  # None 방지
 
-            if num is None:
-                num = 0
-            else:
-                num -= 1
+            #if num is None:
+            #    num = 0
+            #else:
+            #    num -= 1
 
             # Album 객체 목록 가져오기
-            album_list = list(Album.objects.values())
+            #album_list = list(Album.objects.values())
 
-            if num < 0 or num >= len(album_list):  # 인덱스 유효성 체크
-                code = "0001"
-            else:
-                code = album_list[num].get('album_code', "0001")
+            #if num < 0 or num >= len(album_list):  # 인덱스 유효성 체크
+            #    code = "0001"
+            #else:
+            #    code = album_list[num].get('album_code', "0001")
 
             # 코드 변환 로직
-            if str(code) == "0" or not code:
-                code = "0001"
-            elif len(code) >= 7:
-                code = code[7:]
-                code = str(int(code) + 1).zfill(4)
+            #if str(code) == "0" or not code:
+            #    code = "0001"
+            #elif len(code) >= 7:
+            #    code = code[7:]
+            #    code = str(int(code) + 1).zfill(4)
 
             # 앨범 카테고리 변환
-            album_Categ = album_Categ or "기타"
-            tag_dict = {
-                "정규": "03",
-                "싱글": "01",
-                "EP": "02"
-            }
-            tag = tag_dict.get(album_Categ, "04")
+            #album_Categ = album_Categ or "기타"
+            #tag_dict = {
+            #    "정규": "03",
+            #    "싱글": "01",
+            #    "EP": "02"
+            #}
+            #tag = tag_dict.get(album_Categ, "04")
 
             # 개봉일 처리
-            if opendate and len(opendate) >= 4:
-                ddd = opendate[2:4]
-            else:
-                ddd = "00"
+            #if opendate and len(opendate) >= 4:
+            #    ddd = opendate[2:4]
+            #else:
+            #    ddd = "00"
 
             # 최종 코드 조합
-            ALBC = f"LA{ddd}{tag}-{code}"
+            #ALBC = f"LA{ddd}{tag}-{code}"
+            ALBC = album_code
             print(ALBC)  # 생성된 앨범 코드 출력
 
             # 앨범 저장
@@ -242,42 +248,82 @@ def save_album(request):
                 UCI_code=album_data["UCI_code"],
                 YT_service=album_data["YT_service"],
                 status=album_data["status"],
+                with_main_artist=album_data["with_main_artist"],
+                feat_main_artist=album_data["feat_main_artist"],
             )
+            # ✅ 아티스트 처리
+            main_artist_id = artist_data.get('main_artist_id', '')
+            if not main_artist_id:
+                return JsonResponse({'status': 'error', 'message': '메인 아티스트는 필수입니다.'}, status=400)
+
+            main_artist_list = main_artist_id.split(',')
+            with_artist_id_list = artist_data.get('with_main_artist_id', '').split(',') if artist_data.get('with_main_artist_id') else []
+            feat_artist_id_list = artist_data.get('feat_main_artist_id', '').split(',') if artist_data.get('feat_main_artist_id') else []
+
+            all_artist_ids = main_artist_list + with_artist_id_list + feat_artist_id_list
+            for artist_id in all_artist_ids:
+                try:
+                    artist_profile = create_Artist_profile.objects.get(Artist_ID=artist_id)
+                except create_Artist_profile.MultipleObjectsReturned:
+                    return JsonResponse({"error": f"중복된 아티스트 ID: {artist_id}"}, status=400)
+                except create_Artist_profile.DoesNotExist:
+                    continue
+
+                if artist_id in main_artist_list:
+                    albums = json.loads(artist_profile.Albums) if artist_profile.Albums else []
+                    if ALBC not in albums:
+                        albums.append(ALBC)
+                        artist_profile.Albums = json.dumps(albums)
+                elif artist_id in with_artist_id_list:
+                    with_albums = json.loads(artist_profile.withAlbums) if artist_profile.withAlbums else []
+                    if ALBC not in with_albums:
+                        with_albums.append(ALBC)
+                        artist_profile.withAlbums = json.dumps(with_albums)
+                elif artist_id in feat_artist_id_list:
+                    feat_albums = json.loads(artist_profile.featAlbums) if artist_profile.featAlbums else []
+                    if ALBC not in feat_albums:
+                        feat_albums.append(ALBC)
+                        artist_profile.featAlbums = json.dumps(feat_albums)
+
+                artist_profile.save()
+
 
             # 트랙 코드 생성
-            last_track = Track.objects.last()
-            tnum = last_track.id if last_track else 0  # None 방지
+            #last_track = Track.objects.last()
+            #tnum = last_track.id if last_track else 0  # None 방지
 
-            if tnum is None:
-                tnum = 0
-            else:
-                tnum -= 1
+            #if tnum is None:
+            #    tnum = 0
+            #else:
+            #    tnum -= 1
 
             # Track 객체 목록 가져오기
-            track_list = list(Track.objects.values())
+            #track_list = list(Track.objects.values())
 
-            if tnum < 0 or tnum >= len(track_list):  # 인덱스 유효성 체크
-                tcode = "0001"
-            else:
-                tcode = track_list[tnum].get('Track_code', "0001")
+            #if tnum < 0 or tnum >= len(track_list):  # 인덱스 유효성 체크
+            #    tcode = "0001"
+            #else:
+            #    tcode = track_list[tnum].get('Track_code', "0001")
 
             # 코드 변환 로직
-            if str(tcode) == "0" or not tcode:
-                tcode = "0001"
-            elif len(tcode) >= 8:
-                tcode = tcode[8:]
-                tcode = str(int(tcode) + 1).zfill(4)
+            #if str(tcode) == "0" or not tcode:
+            #    tcode = "0001"
+            #elif len(tcode) >= 8:
+            #    tcode = tcode[8:]
+            #    tcode = str(int(tcode) + 1).zfill(4)
 
             # 트랙 코드 기본 문자열 생성
-            ttt = str(len(track_no))  # 정수를 문자열로 변환
-            Track_code_bd = f"L{ddd}{tag}{ttt}-"
+            #ttt = str(len(track_no))  # 정수를 문자열로 변환
+            #Track_code_bd = f"L{ddd}{tag}{ttt}-"
 
             # 트랙 코드 리스트 생성
-            Track_code_list = []
+            #Track_code_list = []
 
-            for j in range(len(track_no)):
-                Track_code_list.append(Track_code_bd + tcode)
-                tcode = str(int(tcode) + 1).zfill(4)  # 간단하게 변환
+            #for j in range(len(track_no)):
+            #    Track_code_list.append(Track_code_bd + tcode)
+            #    tcode = str(int(tcode) + 1).zfill(4)  # 간단하게 변환
+
+            #기본데이터 먼저 등록하고 난 후에 자동형으로 바꾸기로. 마지막 데이터의 끝 부분만 불러와서 숫자+하는 걸로
 
             alb_id = Album.objects.filter(album_code=ALBC).values_list('id', flat=True).first()
 
@@ -287,7 +333,8 @@ def save_album(request):
                     album_id=alb_id,
                     disk_no=int(track["disk_no"]),
                     track_no=int(track["track_no"]),
-                    track_code=Track_code_list[idx],  # ✅ 각 트랙에 개별적인 코드 할당
+                    #track_code=Track_code_list[idx],  # ✅ 각 트랙에 개별적인 코드 할당
+                    track_code=track["track_code"],
                     song_title=track["song_title"],
                     song_artist=track["song_artist"],
                     track_genre=track["track_genre"],
@@ -302,36 +349,34 @@ def save_album(request):
                     with_artist=track["with_artist"],
                     featured=track["featured"],
                     ISRC=track["ISRC"],
-                )
-
+            )
+                
             #정산정보 저장
-                user_ac = float(user_ac) * 0.01
-                com_ac = 1 - float(user_ac)
-
-                user = rightholder_cr.objects.get(user_code=user_c)
-                albums_list = user.albums
-                if ALBC not in albums_list:
-                    albums_list.append(ALBC)
-                    user.albums = albums_list  # JSONField 업데이트
-                    user.save()  # 변경사항 저장
-                    return JsonResponse({
-                        "message": "앨범이 성공적으로 저장되었습니다.",
-                        "album_code": ALBC  # ✅ album_code를 응답 데이터에 포함
-                    }, status=200)
-                else:
-                    return JsonResponse({"message": "이미 존재하는 앨범입니다.", "albums": user.albums}, status=400)
-            
+            user_ac = float(user_ac) * 0.01
+            com_ac = 1 - float(user_ac)
+            user = rightholder_cr.objects.get(user_code=user_c)
+            albums_list = user.albums
             Accounting_base.objects.create(
                 Album_code = ALBC,
                 rightholder_code = user_c,
                 User_Fees = user_ac,
                 company_fees = com_ac,
             )
-
-            return JsonResponse({"message": "앨범과 트랙이 성공적으로 저장되었습니다!"}, status=200)
-
+            
+            if ALBC not in albums_list:
+                albums_list.append(ALBC)
+                user.albums = albums_list  # JSONField 업데이트
+                user.save()  # 변경사항 저장
+            else:
+                return JsonResponse({"message": "이미 존재하는 앨범입니다.", "albums": user.albums}, status=400)
+            
+            return JsonResponse({
+                "message": "앨범이 성공적으로 저장되었습니다.",
+                "album_code": ALBC  # ✅ album_code를 응답 데이터에 포함
+            }, status=200)
+                
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Invalid request method"}, status=400)
 

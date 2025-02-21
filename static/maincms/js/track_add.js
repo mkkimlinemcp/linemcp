@@ -64,6 +64,7 @@ $(document).ready(function () {
                             <div class="info-field jf-item">
                                 <div class="label-field lab-sm"><i class="bi bi-check"></i>대표곡</div><input class="form-check-input" type="checkbox" value="" name="title_song[]">
                                 <div class="label-field lab-sm"><i class="bi bi-check"></i>성인</div><input class="form-check-input" type="checkbox" value="" name="adult[]">
+                                <div class="label-field"><i class="bi bi-check check"></i>곡코드</div><input class="form-tr" type="text" name="track_code[]">
                             </div>
                             <div class="info-field">
                                 <div class="label-field lab"><i class="bi bi-check check"></i>음원추가</div><input class="form-control form-control-sm song_file" id="song_file[]" type="file" style="width:250px;"><input class="form-tr track_length" type="text" name="track_length[]"style="width:80px;"><input class="form-control form-control-sm" id="lyric_file[]" type="file"style="width:230px;">
