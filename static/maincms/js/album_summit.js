@@ -60,6 +60,7 @@ $(document).on("click", "#album_add", function (e) {
             with_artist: detailRow.find("input[name='with_artist[]']").val() || "",
             featured: detailRow.find("input[name='featured[]']").val() || "",
             ISRC: detailRow.find("input[name='isrc[]']").val() || "",
+            UCI: detailRow.find("input[name='uci[]']").val() || "",
         };
 
         trackData.push(track);

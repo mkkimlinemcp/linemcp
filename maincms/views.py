@@ -349,6 +349,7 @@ def save_album(request):
                     with_artist=track["with_artist"],
                     featured=track["featured"],
                     ISRC=track["ISRC"],
+                    UCI=track["uci"],
             )
                 
             #정산정보 저장

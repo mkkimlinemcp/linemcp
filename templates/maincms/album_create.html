@@ -1,7 +1,10 @@
 {% extends 'maincms_base.html' %}
 {% block content %}
 {% include "maincms/navbar.html" %}
+{% load static %}
 <meta name="csrf-token" content="{{ csrf_token }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="{% static 'maincms/js/test.js' %}"></script>
 <!-- 앨범 정보 상자 -->
 <div class="container-lg my-4 py-3">
     <div class="info-field"><h5 class="fw-bold">앨범 정보</h5><input class="form-in" type="text" name="album_code"></div>
@@ -11,7 +14,9 @@
                 <p>앨범 커버 업로드</p>
                 <input type="file" id="cover-input" style="display: none;" accept="image/*">
                 <img id="cover-preview" src="" alt="앨범 커버 미리보기" style="display:none; width: 100%; height: 100%; object-fit: cover;">
+                
             </div>
+            <a class="btn btn-outline-primary btn-sm my-3" id="excel_data_up" role="button" style="width: 150px;">데이터 업로드</a>
         </div>
         <div class="info-field-column left-auto">
             <div class="info-field">
@@ -106,7 +111,7 @@
                 <div class="label-field"><i class="bi bi-check check"></i>서비스 영역</div>
                 <select class="form-select-sm" name="service_area" style="width: 203px;">
                     <option selected>선택하세요</option>
-                    <option value="WW">전세계</option>
+                    <option value="전세계">전세계</option>
                     <option value="국내">국내</option>
                     <option value="해외">해외</option>
                 </select>
@@ -315,6 +320,231 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function () {
+
+    $("#excel_data_up").click(function () {
+        const fileInput = $("<input>").attr({
+            type: "file",
+            accept: ".xlsx, .xls"
+        });
+
+        fileInput.click();
+
+        fileInput.change(function (event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                if (jsonData.length <= 1) {
+                    alert("엑셀에 데이터가 없습니다.");
+                    return;
+                }
+
+                const headers = jsonData[0]; 
+                const dataRows = jsonData.slice(1); 
+
+                // ✅ 앨범 정보 등록 (첫 번째 데이터 기준)
+                const albumFields = {
+                    album_code: 'albumcode',
+                    album_title: 'album_title',
+                    album_title_en: 'album_title_en',
+                    album_artist: 'album_artist',
+                    album_genre: 'album_genre',
+                    album_Categ: 'album_Categ',
+                    album_country: 'album_country',
+                    album_copyright: 'album_copyright',
+                    album_publish: 'album_publish',
+                    startdate: 'startdate',
+                    opendate: 'opendate',
+                    service_area: 'service_area',
+                    excluded: 'excluded',
+                    service_lang: 'service_lang',
+                    YT_service: 'YT_service',
+                    service_time: 'service_time',
+                    UCI_code: 'UCI',
+                    UPC_code: 'UPC'
+                };
+
+                const albumData = dataRows[0]; 
+
+                headers.forEach((header, index) => {
+                    const fieldName = header.trim();
+                    if (albumFields[fieldName]) {
+                        let value = albumData[index] || '';
+
+                        // 날짜 변환
+                        if (fieldName === 'startdate' || fieldName === 'opendate') {
+                            value = excelDateToJSDate(value);
+                        }
+
+                        // 시간 변환
+                        if (fieldName === 'service_time') {
+                            value = excelTimeToHHMM(value);
+                        }
+
+                        // 폼에 값 넣기
+                        const input = $(`[name="${albumFields[fieldName]}"]`);
+                        if (input.length) {
+                            if (input.is("select")) {
+                                input.val(value);
+                            } else {
+                                input.val(value);
+                            }
+                        }
+                    }
+                });
+
+                // ✅ 기존 트랙 정보 초기화
+                $("#result-table tbody").remove();
+
+                // ✅ 트랙 정보 생성
+                dataRows.forEach((row, index) => {
+                    const rowData = {};
+                    headers.forEach((header, i) => {
+                        rowData[header.trim()] = row[i];
+                    });
+
+                    const diskNo = rowData["disk_no"] || 1;
+                    const trackNo = rowData["track_no"] || (index + 1);
+
+                    createTrackRow(diskNo, trackNo, rowData);
+                });
+
+                alert("앨범 정보와 트랙 정보가 성공적으로 생성되었습니다.");
+            };
+
+            reader.readAsArrayBuffer(file);
+        });
+    });
+
+    // ✅ 엑셀 날짜 변환 함수 (일련번호 → YYYY-MM-DD)
+    function excelDateToJSDate(serial) {
+        if (typeof serial === 'number') {
+            const utc_days = Math.floor(serial - 25569);
+            const utc_value = utc_days * 86400;
+            const date_info = new Date(utc_value * 1000);
+            const year = date_info.getFullYear();
+            const month = ("0" + (date_info.getMonth() + 1)).slice(-2);
+            const day = ("0" + date_info.getDate()).slice(-2);
+            return `${year}-${month}-${day}`;
+        }
+        return serial;
+    }
+
+    // ✅ 엑셀 시간 변환 함수 (소수점 → HH:MM)
+    function excelTimeToHHMM(serial) {
+        if (typeof serial === 'number') {
+            let totalMinutes = Math.round(serial * 24 * 60);
+            let hours = Math.floor(totalMinutes / 60);
+            let minutes = totalMinutes % 60;
+            return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2);
+        }
+        return serial;
+    }
+
+    // ✅ 트랙 생성 함수 (수정된 폼 적용)
+    function createTrackRow(diskNo, trackNo, rowData) {
+        let tbodyId = `${diskNo}_1`;
+        let tbody = $(`#${tbodyId}`);
+
+        if (tbody.length === 0) {
+            tbody = $("<tbody></tbody>").attr("id", tbodyId);
+            $("#result-table").append(tbody);
+        }
+
+        // ✅ 날짜 변환
+        let trOpenDate = rowData["tr_opendate"];
+        if (typeof trOpenDate === 'number') {
+            trOpenDate = excelDateToJSDate(trOpenDate);
+        }
+
+        const row = $(`<tr>
+            <th class='text-center'><input class="form-ck" type="number" id="disk_no_${diskNo}" name="disk_no[]" style="width: 31px;" value="${diskNo}"></th>
+            <th class='text-center'><input class="form-ck" type="number" id="track_no_${trackNo}" name="track_no[]" style="width: 31px;" value="${trackNo}"></th>
+            <th class='text-center' id="song_title_view_${diskNo}_${trackNo}">${rowData["song_title"] || ''}</th>
+            <th class='text-center' id="artist_view_${diskNo}_${trackNo}">${rowData["song_artist"] || ''}</th>
+            <th class='text-center'><i class="bi bi-chevron-up icon" data-target="detail_${diskNo}_${trackNo}"></i></th>
+        </tr>
+        <tr id="detail_${diskNo}_${trackNo}">
+            <th colspan='3'>
+                <div class="info-field">
+                    <div class="info-field-column">
+                        <div class="info-field">
+                            <div class="label-field"><i class="bi bi-check check"></i>곡 제목</div><input class="form-tr song-title" type="text" name="song_title[]" value="${rowData["song_title"] || ''}" data-target="song_title_view_${diskNo}_${trackNo}">
+                            <div class="label-field"><i class="bi bi-check check"></i>곡 아티스트</div><input class="form-tr song-artist" type="text" name="song_artist[]" value="${rowData["song_artist"] || ''}" data-modal="modal2" data-target="artist_view_${diskNo}_${trackNo}">
+                        </div>
+                        <div class="info-field">
+                            <div class="label-field"><i class="bi bi-check check"></i>트랙 장르</div>
+                            <select class="form-select-sm track_genre" name="track_genre[]" style="width: 203px;">
+                                <option selected>선택하세요</option>
+                                <option value="POP" ${rowData["track_genre"] === 'POP' ? 'selected' : ''}>POP</option>
+                                <option value="Dance" ${rowData["track_genre"] === 'Dance' ? 'selected' : ''}>Dance</option>
+                                <option value="Hiphop" ${rowData["track_genre"] === 'Hiphop' ? 'selected' : ''}>Hiphop</option>
+                                <option value="Newage" ${rowData["track_genre"] === 'Newage' ? 'selected' : ''}>Newage</option>
+                                <option value="Indie pop" ${rowData["track_genre"] === 'Indie pop' ? 'selected' : ''}>Indie pop</option>
+                                <option value="Indie" ${rowData["track_genre"] === 'Indie' ? 'selected' : ''}>Indie</option>
+                                <option value="Indie Rock" ${rowData["track_genre"] === 'Indie Rock' ? 'selected' : ''}>Indie Rock</option>
+                                <option value="Indie Folk" ${rowData["track_genre"] === 'Indie Folk' ? 'selected' : ''}>Indie Folk</option>
+                                <option value="Folk" ${rowData["track_genre"] === 'Folk' ? 'selected' : ''}>Folk</option>
+                                <option value="World" ${rowData["track_genre"] === 'World' ? 'selected' : ''}>World</option>
+                                <option value="OST" ${rowData["track_genre"] === 'OST' ? 'selected' : ''}>OST</option>
+                                <option value="Trot" ${rowData["track_genre"] === 'Trot' ? 'selected' : ''}>Trot</option>
+                                <option value="Instrumental" ${rowData["track_genre"] === 'Instrumental' ? 'selected' : ''}>Instrumental</option>
+                            </select>
+                            <div class="label-field"><i class="bi bi-check check"></i>서비스 언어</div>
+                            <select class="form-select-sm service-lang" name="track_lang[]" style="width: 203px;">
+                                <option selected>선택하세요</option>
+                                <option value="한국어" ${rowData["track_lang"] === '한국어' ? 'selected' : ''}>한국어</option>
+                                <option value="영어" ${rowData["track_lang"] === '영어' ? 'selected' : ''}>영어</option>
+                                <option value="일본어" ${rowData["track_lang"] === '일본어' ? 'selected' : ''}>일본어</option>
+                            </select>
+                        </div>
+                        <div class="info-field">
+                            <div class="label-field"><i class="bi bi-check check"></i>오픈일</div><input class="form-tr datepicker" type="text" name="tr_opendate[]" value="${trOpenDate || ''}">
+                            <div class="label-field"><i class="bi bi-check check"></i>ISRC</div><input class="form-tr" type="text" name="isrc[]" value="${rowData["ISRC"] || ''}">
+                        </div>
+                        <div class="info-field jf-item">
+                            <div class="label-field lab-sm"><i class="bi bi-check"></i>대표곡</div><input class="form-check-input" type="checkbox" name="title_song[]" ${rowData["title_song"] ? 'checked' : ''}>
+                            <div class="label-field lab-sm"><i class="bi bi-check"></i>성인</div><input class="form-check-input" type="checkbox" name="adult[]" ${rowData["adult"] ? 'checked' : ''}>
+                            <div class="label-field"><i class="bi bi-check check"></i>곡코드</div><input class="form-tr" type="text" name="track_code[]" value="${rowData["track_code"] || ''}">
+                        </div>
+                        <div class="info-field">
+                            <div class="label-field lab"><i class="bi bi-check check"></i>음원추가</div><input class="form-control form-control-sm song_file" id="song_file[]" type="file" style="width:250px;"><input class="form-tr track_length" type="text" name="track_length[]" style="width:80px;"><input class="form-control form-control-sm" id="lyric_file[]" type="file" style="width:230px;">
+                        </div>
+                    </div>
+                </div>
+            </th>
+            <th>
+                <div class="info-field-column jf-item">
+                    <div class="info-field"><div class="label-field"><i class="bi bi-check"></i>작사가</div><input class="form-control form-control-sm col" type="text" name="lyricist[]" value="${rowData["lyricist"] || ''}"></div>
+                    <div class="info-field"><div class="label-field"><i class="bi bi-check check"></i>작곡가</div><input class="form-control form-control-sm col" type="text" name="composer[]" value="${rowData["composer"] || ''}"></div>
+                    <div class="info-field"><div class="label-field"><i class="bi bi-check check"></i>편곡가</div><input class="form-control form-control-sm col" type="text" name="arranger[]" value="${rowData["arranger"] || ''}"></div>
+                    <div class="info-field"><div class="label-field"><i class="bi bi-check"></i>참여아티스트</div><input class="form-control form-control-sm col" type="text" name="with_artist[]" value="${rowData["with_artist"] || ''}"></div>
+                    <div class="info-field"><div class="label-field"><i class="bi bi-check"></i>피쳐링아티스트</div><input class="form-control form-control-sm col" type="text" name="featured[]" value="${rowData["featured"] || ''}"></div>
+                    <div class="info-field"><div class="label-field"><i class="bi bi-check"></i>uci</div><input class="form-control form-control-sm col" type="text" name="uci[]" value="${rowData["UCI"] || ''}"></div>
+                </div>
+            </th>
+            <th class="text-center">
+                <div class="info-field-column">
+                    <a class='btn btn-danger btn-sm delete-btn'>트랙 삭제</a>
+                </div>
+            </th>
+        </tr>`);
+
+        tbody.append(row);
+    }
+
+});
+</script>
 
 <script>
 $(document).ready(function () {

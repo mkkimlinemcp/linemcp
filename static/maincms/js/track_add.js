@@ -79,6 +79,7 @@ $(document).ready(function () {
                         <div class="info-field"><div class="label-field"><i class="bi bi-check check"></i>편곡가</div><input class="form-control form-control-sm col" type="text" name="arranger[]"></div>
                         <div class="info-field"><div class="label-field"><i class="bi bi-check"></i>참여아티스트</div><input class="form-control form-control-sm col" type="text" name="with_artist[]"></div>
                         <div class="info-field"><div class="label-field"><i class="bi bi-check"></i>피쳐링아티스트</div><input class="form-control form-control-sm col" type="text" name="featured[]"></div>
+                        <div class="info-field"><div class="label-field"><i class="bi bi-check"></i>uci</div><input class="form-control form-control-sm col" type="text" name="uci[]"></div>
                     </div>
                 </th>
                 <th class="text-center">
@@ -96,14 +97,13 @@ $(document).ready(function () {
         addup = parseInt(outerLoop) + 1;
         $("#disc_total_num").val(addup);
         $(document).ready(function () {
-            // 실시간 변경 시 상위 값 갱신
-            $(".song-title").on("input", function () {
+            // 실시간 변경 시 상위 값 갱신 (동적 요소까지 포함)
+            $(document).on("input", ".song-title", function () {
                 const targetId = $(this).data("target");
                 $("#" + targetId).text($(this).val());
-                console.log(targetId);
             });
-
-            $(".song-artist").on("input", function () {
+        
+            $(document).on("input", ".song-artist", function () {
                 const targetId = $(this).data("target");
                 $("#" + targetId).text($(this).val());
             });
