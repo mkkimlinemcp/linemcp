@@ -1,52 +1,60 @@
 {% extends 'maincms_base.html' %}
 {% block content %}
 {% include "maincms/navbar.html" %}
-<div class="container-lg py-3">
-    {% include "maincms/rh_navbar.html" %}
 
-    <h5 class="fw-bold mb-2">권리자 검색</h5>
-    <form method="get" action="{% url 'maincms:rightholder_view' %}" class="info-field-start mb-5" style="font-size: 13px;">
-        <input type="text" name="q" class="form-tr" placeholder="권리자 검색"
-               value="{{ search_query }}">
-        <select name="field" class="form-select-sm" style="height: 31px;">
-            <option value="">카테고리 선택</option>
-            <option value="user_name" {% if field == "user_name" %}selected{% endif %}>이름</option>
-            <option value="email" {% if field == "email" %}selected{% endif %}>이메일</option>
-        </select>
-        <button type="submit" class="btn btn-primary btn-sm">검색</button>
-    </form>
+<div class=".container-fluid" style="height: 100vh; padding-top: 81px;">
+    <div class="d-flex flex-row d-flex align-items-start mb-3" style="height: -webkit-fill-available;">
+        <div>
+            {% include "maincms/sidebar.html" %}
+        </div>
+        <div>
+            <div class="container-lg py-3">
+                <h5 class="fw-bold mb-2">권리자 검색</h5>
+                <form method="get" action="{% url 'maincms:rightholder_view' %}" class="info-field-start mb-5" style="font-size: 13px;">
+                    <input type="text" name="q" class="form-tr" placeholder="권리자 검색"
+                        value="{{ search_query }}">
+                    <select name="field" class="form-select-sm" style="height: 31px;">
+                        <option value="">카테고리 선택</option>
+                        <option value="user_name" {% if field == "user_name" %}selected{% endif %}>이름</option>
+                        <option value="email" {% if field == "email" %}selected{% endif %}>이메일</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary btn-sm">검색</button>
+                </form>
 
-    <h5 class="fw-bold mb-2">권리자 리스트</h5>
-    <table class="table">
-        <thead class="table-light">
-            <tr>
-            <th scope="col-1" class="text-center" style="width:50px;">NO.</th>
-            <th scope="col" class="text-center">권리자</th>
-            <th scope="col" class="text-center">Code</th>
-            <th scope="col" class="text-center">Email</th>
-            <th scope="col" class="text-center">앨범</th>
-            <th scope="col" class="text-center">등급</th>
-            <th scope="col" class="text-center">유형</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if rightholder_list %}
-            {% for p in rightholder_list %}
-            <tr style="font-size: 13px;">
-                <td class="text-center">{{ forloop.counter }}</td>
-                <td class="text-center">{{ p.user_name }}</td>
-                <td class="text-center">{{ p.user_code }}</td>
-                <td class="text-center">{{ p.email }}</td>
-                <td class="text-center">{{ p.albums }}</td>
-                <td class="text-center">{{ p.user_level }}</td>
-                <td class="text-center">{{ p.user_type }}</td>
-            </tr>
-            {% endfor %}
-            {% else %}
-                <tr><td>데이터 없음</td></tr>
-            {% endif %}
-        </tbody>
-     </table>
+                <h5 class="fw-bold mb-2">권리자 리스트</h5>
+                <table class="table">
+                    <thead class="table-light">
+                        <tr>
+                        <th scope="col-1" class="text-center" style="width:50px;">NO.</th>
+                        <th scope="col" class="text-center">권리자</th>
+                        <th scope="col" class="text-center">Code</th>
+                        <th scope="col" class="text-center">Email</th>
+                        <th scope="col" class="text-center">앨범</th>
+                        <th scope="col" class="text-center">등급</th>
+                        <th scope="col" class="text-center">유형</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if rightholder_list %}
+                        {% for p in rightholder_list %}
+                        <tr style="font-size: 13px;">
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td class="text-center">{{ p.user_name }}</td>
+                            <td class="text-center">{{ p.user_code }}</td>
+                            <td class="text-center">{{ p.email }}</td>
+                            <td class="text-center">{{ p.albums }}</td>
+                            <td class="text-center">{{ p.user_level }}</td>
+                            <td class="text-center">{{ p.user_type }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                            <tr><td>데이터 없음</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

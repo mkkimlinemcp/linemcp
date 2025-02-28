@@ -1,5 +1,14 @@
 {% extends 'maincms_base.html' %}
 {% block content %}
 {% include "maincms/navbar.html" %}
-<h1>메인페이지</h1>
+<div class=".container-fluid" style="height: 100vh; padding-top: 81px;">
+    <div class="d-flex flex-row d-flex align-items-start mb-3" style="height: -webkit-fill-available;">
+        <div>
+            {% include "maincms/sidebar.html" %}
+        </div>
+        <div>
+            <h1>메인페이지</h1>
+        </div>
+    </div>
+</div>
 {% endblock %}

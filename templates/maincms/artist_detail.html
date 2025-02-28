@@ -1,88 +1,97 @@
 {% extends 'maincms_base.html' %}
 {% block content %}
 {% include "maincms/navbar.html" %}
-<div class="container-lg py-3">
-    {% include "maincms/ar_navbar.html" %}
-    <h5 class="fw-bold">아티스트 정보</h5>
-    <form id="artist_create" method="post" enctype="multipart/form-data">
-        {% csrf_token %} 
-        <input type="hidden" name="artist_id" value="{{ artist_d.id }}">
-        <input type="hidden" name="Artist_ID" value="{{ artist_d.Artist_ID }}">
-        <div class="info-field-col-st mb-3">
-            <div class="info-field-start">
-                {% if artist_d.Artist_image %}
-                <img src="http://localhost:8000/media/{{ artist_d.Artist_image }}" style="width: 150px;" height="150px;">
-                {% else %}
-                <img src="http://localhost:8000/media/Artist_images/user_image_none.png" style="width: 150px;" height="150px;">
-                {% endif %}
-                <div class="info-field-column">
-                    <div class="info-field-start mb-3">
-                        <div class="label-field"><i class="bi bi-check check"></i>아티스트 이름</div><input class="form-in" type="text" name="Artist_name" value="{{ artist_d.Artist_name }}">
-                        <div class="label-field"><i class="bi bi-check"></i>아티스트 이름(영문)</div><input class="form-in" type="text" name="Artist_name_en" value="{{ artist_d.Artist_name_en }}">
-                    </div>
-                    <div class="info-field-start mb-3">
-                        <div class="label-field" ><i class="bi bi-check check"></i>성별</div>
-                            <select class="form-select-sm" name="sex" style="width: 203px;">
-                                <option {% if artist_d.sex == "" %}selected{% endif %}>선택하세요</option>
-                                <option value="Man" {% if artist_d.sex == "Man" %}selected{% endif %}>남성</option>
-                                <option value="Female" {% if artist_d.sex == "Female" %}selected{% endif %}>여성</option>
-                                <option value="mixed" {% if artist_d.sex == "mixed" %}selected{% endif %}>혼성</option>
-                            </select>
-                            <div class="label-field"><i class="bi bi-check check"></i>유형</div>
-                            <select class="form-select-sm" name="category" style="width: 203px;">
-                                <option {% if artist_d.category == "" %}selected{% endif %}>선택하세요</option>
-                                <option value="Solo" {% if artist_d.category == "Solo" %}selected{% endif %}>솔로</option>
-                                <option value="Duo" {% if artist_d.category == "Duo" %}selected{% endif %}>듀오</option>
-                                <option value="Group" {% if artist_d.category == "Group" %}selected{% endif %}>그룹</option>
-                            </select>
+
+<div class=".container-fluid" style="height: 100vh; padding-top: 81px;">
+    <div class="d-flex flex-row d-flex align-items-start mb-3" style="height: -webkit-fill-available;">
+        <div>
+            {% include "maincms/sidebar.html" %}
+        </div>
+        <div>
+            <div class="container-lg py-3">
+                <h5 class="fw-bold">아티스트 정보</h5>
+                <form id="artist_create" method="post" enctype="multipart/form-data">
+                    {% csrf_token %} 
+                    <input type="hidden" name="artist_id" value="{{ artist_d.id }}">
+                    <input type="hidden" name="Artist_ID" value="{{ artist_d.Artist_ID }}">
+                    <div class="info-field-col-st mb-3">
+                        <div class="info-field-start">
+                            {% if artist_d.Artist_image %}
+                            <img src="http://localhost:8000/media/{{ artist_d.Artist_image }}" style="width: 150px;" height="150px;">
+                            {% else %}
+                            <img src="http://localhost:8000/media/Artist_images/user_image_none.png" style="width: 150px;" height="150px;">
+                            {% endif %}
+                            <div class="info-field-column">
+                                <div class="info-field-start mb-3">
+                                    <div class="label-field"><i class="bi bi-check check"></i>아티스트 이름</div><input class="form-in" type="text" name="Artist_name" value="{{ artist_d.Artist_name }}">
+                                    <div class="label-field"><i class="bi bi-check"></i>아티스트 이름(영문)</div><input class="form-in" type="text" name="Artist_name_en" value="{{ artist_d.Artist_name_en }}">
+                                </div>
+                                <div class="info-field-start mb-3">
+                                    <div class="label-field" ><i class="bi bi-check check"></i>성별</div>
+                                        <select class="form-select-sm" name="sex" style="width: 203px;">
+                                            <option {% if artist_d.sex == "" %}selected{% endif %}>선택하세요</option>
+                                            <option value="Man" {% if artist_d.sex == "Man" %}selected{% endif %}>남성</option>
+                                            <option value="Female" {% if artist_d.sex == "Female" %}selected{% endif %}>여성</option>
+                                            <option value="mixed" {% if artist_d.sex == "mixed" %}selected{% endif %}>혼성</option>
+                                        </select>
+                                        <div class="label-field"><i class="bi bi-check check"></i>유형</div>
+                                        <select class="form-select-sm" name="category" style="width: 203px;">
+                                            <option {% if artist_d.category == "" %}selected{% endif %}>선택하세요</option>
+                                            <option value="Solo" {% if artist_d.category == "Solo" %}selected{% endif %}>솔로</option>
+                                            <option value="Duo" {% if artist_d.category == "Duo" %}selected{% endif %}>듀오</option>
+                                            <option value="Group" {% if artist_d.category == "Group" %}selected{% endif %}>그룹</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <h5 class="fw-bold">아티스트 url</h5>
+                    <div class="info-field-column">
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Apple Url</div><input class="form-in" style="width: 400px;" type="text" name="Apple_url" value="{{ artist_d.Apple_url }}">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Spotify Url</div><input class="form-in" style="width: 400px;" type="text" name="Spotify_ID" value="{{ artist_d.Spotify_ID }}">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Melon Url</div><input class="form-in" style="width: 400px;" type="text" name="Melon_ID" value="{{ artist_d.Melon_ID }}">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Genie Url</div><input class="form-in" style="width: 400px;" type="text" name="genie_url" value="{{ artist_d.genie_url }}">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Bugs Url</div><input class="form-in" style="width: 400px;" type="text" name="bugs_url" value="{{ artist_d.bugs_url }}">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Flo Url</div><input class="form-in" style="width: 400px;" type="text" name="flo_url" value="{{ artist_d.flo_url }}">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Vibe Url</div><input class="form-in" style="width: 400px;" type="text" name="vibe_url" value="{{ artist_d.vibe_url }}">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Youtube Topic</div><input class="form-in" style="width: 400px;" type="text" name="Youtube_ID" value="{{ artist_d.Youtube_ID }}">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>아티스트 이미지</div><input class="form-control form-control-sm" style="width: 400px;" type="file" id="Artist_image" name="Artist_image">
                         </div>
                     </div>
-                </div>
-            </div>
-        <h5 class="fw-bold">아티스트 url</h5>
-        <div class="info-field-column">
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Apple Url</div><input class="form-in" style="width: 400px;" type="text" name="Apple_url" value="{{ artist_d.Apple_url }}">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Spotify Url</div><input class="form-in" style="width: 400px;" type="text" name="Spotify_ID" value="{{ artist_d.Spotify_ID }}">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Melon Url</div><input class="form-in" style="width: 400px;" type="text" name="Melon_ID" value="{{ artist_d.Melon_ID }}">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Genie Url</div><input class="form-in" style="width: 400px;" type="text" name="genie_url" value="{{ artist_d.genie_url }}">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Bugs Url</div><input class="form-in" style="width: 400px;" type="text" name="bugs_url" value="{{ artist_d.bugs_url }}">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Flo Url</div><input class="form-in" style="width: 400px;" type="text" name="flo_url" value="{{ artist_d.flo_url }}">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Vibe Url</div><input class="form-in" style="width: 400px;" type="text" name="vibe_url" value="{{ artist_d.vibe_url }}">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Youtube Topic</div><input class="form-in" style="width: 400px;" type="text" name="Youtube_ID" value="{{ artist_d.Youtube_ID }}">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>아티스트 이미지</div><input class="form-control form-control-sm" style="width: 400px;" type="file" id="Artist_image" name="Artist_image">
+                    <h5 class="fw-bold">아티스트 설명</h5>
+                    <div class="info-field-column">
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>아티스트 소개</div><textarea class="form-control" type="text" name="bio" rows="3"></textarea>
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>비고</div><textarea class="form-control" type="text" name="artist_etc" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="info-field-column">
+                        <button type="submit" class="btn btn-primary" formaction="{% url 'maincms:artist_update' artist_d.id %}">수정하기</button>
+                        <button type="submit" class="btn btn-danger" formaction="{% url 'maincms:artist_delete' artist_d.id %}" onclick="return confirm('정말 삭제하시겠습니까?');">삭제하기</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <h5 class="fw-bold">아티스트 설명</h5>
-        <div class="info-field-column">
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>아티스트 소개</div><textarea class="form-control" type="text" name="bio" rows="3"></textarea>
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>비고</div><textarea class="form-control" type="text" name="artist_etc" rows="3"></textarea>
-            </div>
-        </div>
-        <div class="info-field-column">
-            <button type="submit" class="btn btn-primary" formaction="{% url 'maincms:artist_update' artist_d.id %}">수정하기</button>
-            <button type="submit" class="btn btn-danger" formaction="{% url 'maincms:artist_delete' artist_d.id %}" onclick="return confirm('정말 삭제하시겠습니까?');">삭제하기</button>
-        </div>
-    </form>
+    </div>
 </div>
 
     {% endblock %}

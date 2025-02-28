@@ -1,98 +1,108 @@
 {% extends 'maincms_base.html' %}
 {% block content %}
 {% include "maincms/navbar.html" %}
-<div class="container-lg my-3" style="background-color: whitesmoke;">
-    <div class="row my-3 align-items-center">
-        <div class="input-group mb-1 col">
-            <span class="input-group-text" id="num">num1</span>
-            <input type="text" class="form-control" id="mun">
+
+<div class=".container-fluid" style="height: 100vh; padding-top: 81px;">
+    <div class="d-flex flex-row d-flex align-items-start mb-3" style="height: -webkit-fill-available;">
+        <div>
+            {% include "maincms/sidebar.html" %}
         </div>
-        <div class="input-group mb-1 col">
-            <span class="input-group-text" id="num2">num2</span>
-            <input type="text" class="form-control" id="num2">
+        <div>
+            <div class="container-lg my-3" style="background-color: whitesmoke;">
+                <div class="row my-3 align-items-center">
+                    <div class="input-group mb-1 col">
+                        <span class="input-group-text" id="num">num1</span>
+                        <input type="text" class="form-control" id="mun">
+                    </div>
+                    <div class="input-group mb-1 col">
+                        <span class="input-group-text" id="num2">num2</span>
+                        <input type="text" class="form-control" id="num2">
+                    </div>
+                </div>
+            </div>
+            <div class="container-lg my-3" style="background-color: whitesmoke;">
+                <!--<form id="test" method="get">-->
+                    <div id="1">
+                        <div class="row my-3 align-items-center">
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test1</span>
+                                <input type="text" class="form-control" name="test1" id="test1">
+                            </div>
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test2</span>
+                                <input type="text" class="form-control" name="test2" id="test2">
+                            </div>
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test3</span>
+                                <input type="text" class="form-control" name="test3" id="test3">
+                            </div>
+                        </div>
+                        <div class="row my-3 align-items-center">
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test4</span>
+                                <input type="text" class="form-control" name="test4" id="test4">
+                            </div>
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test5</span>
+                                <input type="text" class="form-control" name="test5" id="test5">
+                            </div>
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test6</span>
+                                <input type="text" class="form-control" name="test6" id="test6">
+                            </div>
+                        </div>
+                        <div class="row my-3 align-items-center">
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test7</span>
+                                <input type="text" class="form-control" name="test7" id="test7">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="2">
+                        <div class="row my-3 align-items-center">
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test1</span>
+                                <input type="text" class="form-control" name="test1" id="test1">
+                            </div>
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test2</span>
+                                <input type="text" class="form-control" name="test2" id="test2">
+                            </div>
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test3</span>
+                                <input type="text" class="form-control" name="test3" id="test3">
+                            </div>
+                        </div>
+                        <div class="row my-3 align-items-center">
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test4</span>
+                                <input type="text" class="form-control" name="test4" id="test4">
+                            </div>
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test5</span>
+                                <input type="text" class="form-control" name="test5" id="test5">
+                            </div>
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test6</span>
+                                <input type="text" class="form-control" name="test6" id="test6">
+                            </div>
+                        </div>
+                        <div class="row my-3 align-items-center">
+                            <div class="input-group mb-1 col">
+                                <span class="input-group-text">test7</span>
+                                <input type="text" class="form-control" name="test7" id="test7">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-3 align-items-center">
+                        <button class="btn btn-primary" id="test" type="submit">전송</button>
+                    </div>
+                <!--</form>-->
+            </div>
         </div>
     </div>
 </div>
-<div class="container-lg my-3" style="background-color: whitesmoke;">
-    <!--<form id="test" method="get">-->
-        <div id="1">
-            <div class="row my-3 align-items-center">
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test1</span>
-                    <input type="text" class="form-control" name="test1" id="test1">
-                </div>
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test2</span>
-                    <input type="text" class="form-control" name="test2" id="test2">
-                </div>
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test3</span>
-                    <input type="text" class="form-control" name="test3" id="test3">
-                </div>
-            </div>
-            <div class="row my-3 align-items-center">
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test4</span>
-                    <input type="text" class="form-control" name="test4" id="test4">
-                </div>
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test5</span>
-                    <input type="text" class="form-control" name="test5" id="test5">
-                </div>
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test6</span>
-                    <input type="text" class="form-control" name="test6" id="test6">
-                </div>
-            </div>
-            <div class="row my-3 align-items-center">
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test7</span>
-                    <input type="text" class="form-control" name="test7" id="test7">
-                </div>
-            </div>
-        </div>
-        <div id="2">
-            <div class="row my-3 align-items-center">
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test1</span>
-                    <input type="text" class="form-control" name="test1" id="test1">
-                </div>
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test2</span>
-                    <input type="text" class="form-control" name="test2" id="test2">
-                </div>
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test3</span>
-                    <input type="text" class="form-control" name="test3" id="test3">
-                </div>
-            </div>
-            <div class="row my-3 align-items-center">
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test4</span>
-                    <input type="text" class="form-control" name="test4" id="test4">
-                </div>
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test5</span>
-                    <input type="text" class="form-control" name="test5" id="test5">
-                </div>
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test6</span>
-                    <input type="text" class="form-control" name="test6" id="test6">
-                </div>
-            </div>
-            <div class="row my-3 align-items-center">
-                <div class="input-group mb-1 col">
-                    <span class="input-group-text">test7</span>
-                    <input type="text" class="form-control" name="test7" id="test7">
-                </div>
-            </div>
-        </div>
-        <div class="row my-3 align-items-center">
-            <button class="btn btn-primary" id="test" type="submit">전송</button>
-        </div>
-    <!--</form>-->
 
-</div>
 </script>
 <script>
 $("#test").click(function() {

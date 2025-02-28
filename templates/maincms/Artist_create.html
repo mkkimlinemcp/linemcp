@@ -1,80 +1,89 @@
 {% extends 'maincms_base.html' %}
 {% block content %}
 {% include "maincms/navbar.html" %}
-<div class="container-lg py-3">
-    {% include "maincms/ar_navbar.html" %}
-    <h5 class="fw-bold">아티스트 등록</h5>
-    <form id="artist_create" method="post">
-        {% csrf_token %} 
-        <div class="info-field-col-st mb-3">
-            <div class="info-field-col-st">
-                <div class="info-field-start mb-3">
-                    <div class="label-field"><i class="bi bi-check check"></i>아티스트 이름</div><input class="form-in" type="text" name="Artist_name">
-                    <div class="label-field"><i class="bi bi-check"></i>아티스트 이름(영문)</div><input class="form-in" type="text" name="Artist_name_en">
-                </div>
+
+<div class=".container-fluid" style="height: 100vh; padding-top: 81px;">
+    <div class="d-flex flex-row d-flex align-items-start mb-3" style="height: -webkit-fill-available;">
+        <div>
+            {% include "maincms/sidebar.html" %}
+        </div>
+        <div>
+            <div class="container-lg py-3">
+                <h5 class="fw-bold">아티스트 등록</h5>
+                <form id="artist_create" method="post">
+                    {% csrf_token %} 
+                    <div class="info-field-col-st mb-3">
+                        <div class="info-field-col-st">
+                            <div class="info-field-start mb-3">
+                                <div class="label-field"><i class="bi bi-check check"></i>아티스트 이름</div><input class="form-in" type="text" name="Artist_name">
+                                <div class="label-field"><i class="bi bi-check"></i>아티스트 이름(영문)</div><input class="form-in" type="text" name="Artist_name_en">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-field-col-st">
+                        <div class="info-field-start mb-3">
+                            <div class="label-field" ><i class="bi bi-check check"></i>성별</div>
+                                <select class="form-select-sm" name="sex" style="width: 203px;">
+                                    <option selected>선택하세요</option>
+                                    <option value="Man">남성</option>
+                                    <option value="Female">여성</option>
+                                    <option value="mixed">혼성</option>
+                                </select>
+                                <div class="label-field"><i class="bi bi-check check"></i>유형</div>
+                                <select class="form-select-sm" name="category" style="width: 203px;">
+                                    <option selected>선택하세요</option>
+                                    <option value="Solo">솔로</option>
+                                    <option value="Duo">듀오</option>
+                                    <option value="Group">그룹</option>
+                                </select>
+                            </div>
+                        </div>
+                    <h5 class="fw-bold">아티스트 url</h5>
+                    <div class="info-field-column">
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Apple Url</div><input class="form-in" style="width: 400px;" type="text" name="Apple_url">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Spotify Url</div><input class="form-in" style="width: 400px;" type="text" name="Spotify_ID">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Melon Url</div><input class="form-in" style="width: 400px;" type="text" name="Melon_ID">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Genie Url</div><input class="form-in" style="width: 400px;" type="text" name="genie_url">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Bugs Url</div><input class="form-in" style="width: 400px;" type="text" name="bugs_url">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Flo Url</div><input class="form-in" style="width: 400px;" type="text" name="flo_url">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Vibe Url</div><input class="form-in" style="width: 400px;" type="text" name="vibe_url">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>Youtube Topic</div><input class="form-in" style="width: 400px;" type="text" name="Youtube_ID">
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>아티스트 이미지</div><input class="form-control form-control-sm" style="width: 400px;" type="file" id="Artist_image" name="Artist_image">
+                        </div>
+                    </div>
+                    <h5 class="fw-bold">아티스트 설명</h5>
+                    <div class="info-field-column">
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>아티스트 소개</div><textarea class="form-control" type="text" name="bio" rows="3"></textarea>
+                        </div>
+                        <div class="info-field-start mb-3">
+                            <div class="label-field"><i class="bi bi-check"></i>비고</div><textarea class="form-control" type="text" name="artist_etc" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="info-field-column">
+                        <button type="submit" class="btn btn-primary">등록하기</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="info-field-col-st">
-            <div class="info-field-start mb-3">
-                <div class="label-field" ><i class="bi bi-check check"></i>성별</div>
-                    <select class="form-select-sm" name="sex" style="width: 203px;">
-                        <option selected>선택하세요</option>
-                        <option value="Man">남성</option>
-                        <option value="Female">여성</option>
-                        <option value="mixed">혼성</option>
-                    </select>
-                    <div class="label-field"><i class="bi bi-check check"></i>유형</div>
-                    <select class="form-select-sm" name="category" style="width: 203px;">
-                        <option selected>선택하세요</option>
-                        <option value="Solo">솔로</option>
-                        <option value="Duo">듀오</option>
-                        <option value="Group">그룹</option>
-                    </select>
-                </div>
-            </div>
-        <h5 class="fw-bold">아티스트 url</h5>
-        <div class="info-field-column">
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Apple Url</div><input class="form-in" style="width: 400px;" type="text" name="Apple_url">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Spotify Url</div><input class="form-in" style="width: 400px;" type="text" name="Spotify_ID">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Melon Url</div><input class="form-in" style="width: 400px;" type="text" name="Melon_ID">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Genie Url</div><input class="form-in" style="width: 400px;" type="text" name="genie_url">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Bugs Url</div><input class="form-in" style="width: 400px;" type="text" name="bugs_url">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Flo Url</div><input class="form-in" style="width: 400px;" type="text" name="flo_url">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Vibe Url</div><input class="form-in" style="width: 400px;" type="text" name="vibe_url">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>Youtube Topic</div><input class="form-in" style="width: 400px;" type="text" name="Youtube_ID">
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>아티스트 이미지</div><input class="form-control form-control-sm" style="width: 400px;" type="file" id="Artist_image" name="Artist_image">
-            </div>
-        </div>
-        <h5 class="fw-bold">아티스트 설명</h5>
-        <div class="info-field-column">
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>아티스트 소개</div><textarea class="form-control" type="text" name="bio" rows="3"></textarea>
-            </div>
-            <div class="info-field-start mb-3">
-                <div class="label-field"><i class="bi bi-check"></i>비고</div><textarea class="form-control" type="text" name="artist_etc" rows="3"></textarea>
-            </div>
-        </div>
-        <div class="info-field-column">
-            <button type="submit" class="btn btn-primary">등록하기</button>
-        </div>
-    </form>
+    </div>
 </div>
 
     {% endblock %}
